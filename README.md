@@ -1,4 +1,4 @@
-# Personal Money Manager
+# Flowlet
 
 A private web application for cash flow tracking (income and expenses with a configurable reporting month start day) and a portfolio snapshot (holdings, valuation math in SQL, manual prices, and automated crypto price feeds via CoinGecko).
 

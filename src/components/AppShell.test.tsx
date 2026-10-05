@@ -25,7 +25,8 @@ describe("AppShell", () => {
     if (!aside) return;
 
     const asideScope = within(aside);
-    expect(asideScope.getByText("Money Manager")).toBeDefined();
+    expect(asideScope.getByRole("img", { name: "Flowlet logo" })).toBeDefined();
+    expect(asideScope.getByText("Flowlet")).toBeDefined();
     expect(asideScope.getByText("Add transaction")).toBeDefined();
     expect(asideScope.getByText("Dashboard")).toBeDefined();
     expect(asideScope.getByText("Transactions")).toBeDefined();
@@ -49,7 +50,8 @@ describe("AppShell", () => {
 
     expect(header.classList.contains("lg:hidden")).toBe(true);
     const headerScope = within(header);
-    expect(headerScope.getByText("Money Manager")).toBeDefined();
+    expect(headerScope.getByRole("img", { name: "Flowlet logo" })).toBeDefined();
+    expect(headerScope.getByText("Flowlet")).toBeDefined();
 
     const settingsLink = headerScope.getByRole("link", { name: "Settings" });
     expect(settingsLink.getAttribute("href")).toBe("/settings");
