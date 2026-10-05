@@ -43,3 +43,5 @@ next-env.d.ts
 
 # docs
 /docs
+# superpowers visual companion
+.superpowers/

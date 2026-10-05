@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { login, type ActionState } from "@/actions/auth";
+import { Logo } from "@/components/ui/Logo";
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState<ActionState, FormData>(
@@ -12,12 +13,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-neutral-100 dark:bg-neutral-950">
       <div className="w-full max-w-sm rounded-2xl border border-white/60 dark:border-white/10 bg-white/70 dark:bg-neutral-900/70 p-6 shadow-lg backdrop-blur-md">
-        <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
-          Personal Money Manager
-        </h1>
-        <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-          Sign in to access your dashboard
-        </p>
+        <div className="flex items-center gap-3">
+          <Logo size={40} />
+          <div>
+            <h1 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+              Flowlet
+            </h1>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              Sign in to access your dashboard
+            </p>
+          </div>
+        </div>
 
         <form action={formAction} className="mt-6 space-y-4">
           {state?.error && (

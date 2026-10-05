@@ -10,8 +10,11 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Personal Money Manager",
-  description: "Cash flow tracking and portfolio snapshot",
+  title: "Flowlet",
+  description: "Personal cash flow and portfolio tracking",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

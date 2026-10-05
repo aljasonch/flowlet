@@ -13,6 +13,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { logout } from "@/actions/auth";
+import { Logo } from "@/components/ui/Logo";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -40,8 +41,9 @@ export function AppShell({
       {/* Mobile Top Bar (lg:hidden) */}
       <header className="lg:hidden flex items-center justify-between px-4 pt-3 pb-1">
         <div className="flex items-center gap-2">
+          <Logo size={24} />
           <span className="text-sm font-semibold text-[var(--text)] tracking-tight">
-            Money Manager
+            Flowlet
           </span>
         </div>
         <Link
@@ -62,10 +64,7 @@ export function AppShell({
       <aside className="hidden lg:flex flex-col w-64 shrink-0 sticky top-4 h-[calc(100vh-2rem)] glass m-4 border border-[var(--glass-border)] p-4 justify-between">
         <div>
           <div className="px-3 py-2 mb-6">
-            <h1 className="text-base font-semibold text-[var(--text)] tracking-tight">
-              Money Manager
-            </h1>
-            <p className="text-xs text-[var(--text-muted)]">Personal cash & assets</p>
+            <Logo size={32} showWordmark showSubtitle />
           </div>
 
           <div className="mb-4 px-2">
