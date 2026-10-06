@@ -15,20 +15,30 @@ export default async function AppLayout({
     redirect("/login");
   }
 
+  console.time("[PERF] layout render total");
   const supabase = await createClient();
+
+  console.time("[PERF] layout auth.getUser");
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  console.timeEnd("[PERF] layout auth.getUser");
 
   if (!user) {
+    console.timeEnd("[PERF] layout render total");
     redirect("/login");
   }
 
+  console.time("[PERF] layout debts_summary");
   const { data: debtsSummaryRes } = await supabase.rpc("debts_summary");
+  console.timeEnd("[PERF] layout debts_summary");
+
   const debtsSummary = debtsSummaryRes?.[0] ?? {
     unpaid_debt_count: 0,
     unpaid_receivable_count: 0,
   };
+
+  console.timeEnd("[PERF] layout render total");
 
   return (
     <ToastProvider>

@@ -11,12 +11,17 @@ interface DashboardPageProps {
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+  console.time("[PERF] dashboard render total");
   const supabase = await createClient();
+
+  console.time("[PERF] dashboard auth.getUser");
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  console.timeEnd("[PERF] dashboard auth.getUser");
 
   if (!user) {
+    console.timeEnd("[PERF] dashboard render total");
     redirect("/login");
   }
 
@@ -26,11 +31,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const today = getTodayDate(tz);
 
   // Fetch user profile for month_start_day
+  console.time("[PERF] dashboard profile.select");
   const { data: profile } = await supabase
     .from("profiles")
     .select("month_start_day")
     .eq("user_id", user.id)
     .single();
+  console.timeEnd("[PERF] dashboard profile.select");
 
   const monthStartDay = profile?.month_start_day ?? 1;
   const currentPeriod = getCurrentPeriod(today, monthStartDay);
@@ -52,6 +59,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   }
 
   // Fetch data in parallel via SQL RPC functions
+  console.time("[PERF] dashboard parallel RPCs");
   const [summaryRes, categoriesRes, sourcesRes, trendRes, portfolioRes, debtsRes] =
     await Promise.all([
       supabase.rpc("month_summary", { p_year: year, p_month: month }),
@@ -65,6 +73,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       supabase.rpc("portfolio_summary"),
       supabase.rpc("debts_summary"),
     ]);
+  console.timeEnd("[PERF] dashboard parallel RPCs");
+  console.timeEnd("[PERF] dashboard render total");
 
   const summary = summaryRes.data?.[0] ?? {
     total_income: 0,
