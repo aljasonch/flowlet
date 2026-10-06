@@ -102,26 +102,22 @@ export default async function TransactionsPage({
     txQuery = txQuery.ilike("note", `%${query.trim()}%`);
   }
 
-  console.time("[PERF] transactions txQuery");
-  const { data: transactions, count } = await txQuery;
-  console.timeEnd("[PERF] transactions txQuery");
-
-  // 5. Load categories and sources for filters
-  console.time("[PERF] transactions categories.select");
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("id, name")
-    .eq("user_id", user.id)
-    .order("name");
-  console.timeEnd("[PERF] transactions categories.select");
-
-  console.time("[PERF] transactions sources.select");
-  const { data: sources } = await supabase
-    .from("income_sources")
-    .select("id, name")
-    .eq("user_id", user.id)
-    .order("name");
-  console.timeEnd("[PERF] transactions sources.select");
+  console.time("[PERF] transactions parallel data queries");
+  const [{ data: transactions, count }, { data: categories }, { data: sources }] =
+    await Promise.all([
+      txQuery,
+      supabase
+        .from("categories")
+        .select("id, name")
+        .eq("user_id", user.id)
+        .order("name"),
+      supabase
+        .from("income_sources")
+        .select("id, name")
+        .eq("user_id", user.id)
+        .order("name"),
+    ]);
+  console.timeEnd("[PERF] transactions parallel data queries");
 
   console.timeEnd("[PERF] transactions render total");
 

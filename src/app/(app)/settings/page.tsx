@@ -9,23 +9,27 @@ export default async function SettingsPage() {
     return null;
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("month_start_day, currency, usd_idr_rate, usd_idr_rate_updated_at")
-    .eq("user_id", user.id)
-    .single();
+  const [profileRes, categoriesRes, sourcesRes] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("month_start_day, currency, usd_idr_rate, usd_idr_rate_updated_at")
+      .eq("user_id", user.id)
+      .single(),
+    supabase
+      .from("categories")
+      .select("id, name, is_archived")
+      .eq("user_id", user.id)
+      .order("name"),
+    supabase
+      .from("income_sources")
+      .select("id, name, is_archived")
+      .eq("user_id", user.id)
+      .order("name"),
+  ]);
 
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("id, name, is_archived")
-    .eq("user_id", user.id)
-    .order("name");
-
-  const { data: sources } = await supabase
-    .from("income_sources")
-    .select("id, name, is_archived")
-    .eq("user_id", user.id)
-    .order("name");
+  const profile = profileRes.data;
+  const categories = categoriesRes.data;
+  const sources = sourcesRes.data;
 
   return (
     <SettingsView

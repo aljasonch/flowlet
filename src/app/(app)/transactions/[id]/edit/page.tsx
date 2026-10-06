@@ -27,19 +27,23 @@ export default async function EditTransactionPage({
   }
 
   // Categories & sources: include active ones or the currently assigned one
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("id, name, is_archived")
-    .eq("user_id", user.id)
-    .or(`is_archived.eq.false,id.eq.${transaction.category_id || "00000000-0000-0000-0000-000000000000"}`)
-    .order("name");
+  const [categoriesRes, sourcesRes] = await Promise.all([
+    supabase
+      .from("categories")
+      .select("id, name, is_archived")
+      .eq("user_id", user.id)
+      .or(`is_archived.eq.false,id.eq.${transaction.category_id || "00000000-0000-0000-0000-000000000000"}`)
+      .order("name"),
+    supabase
+      .from("income_sources")
+      .select("id, name, is_archived")
+      .eq("user_id", user.id)
+      .or(`is_archived.eq.false,id.eq.${transaction.source_id || "00000000-0000-0000-0000-000000000000"}`)
+      .order("name"),
+  ]);
 
-  const { data: sources } = await supabase
-    .from("income_sources")
-    .select("id, name, is_archived")
-    .eq("user_id", user.id)
-    .or(`is_archived.eq.false,id.eq.${transaction.source_id || "00000000-0000-0000-0000-000000000000"}`)
-    .order("name");
+  const categories = categoriesRes.data;
+  const sources = sourcesRes.data;
 
   return (
     <div className="py-4">

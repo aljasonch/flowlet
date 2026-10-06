@@ -8,19 +8,23 @@ export default async function NewTransactionPage() {
   if (!user) return null;
 
   // Only active (non-archived) categories and sources in add-form dropdowns
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("id, name")
-    .eq("user_id", user.id)
-    .eq("is_archived", false)
-    .order("name");
+  const [categoriesRes, sourcesRes] = await Promise.all([
+    supabase
+      .from("categories")
+      .select("id, name")
+      .eq("user_id", user.id)
+      .eq("is_archived", false)
+      .order("name"),
+    supabase
+      .from("income_sources")
+      .select("id, name")
+      .eq("user_id", user.id)
+      .eq("is_archived", false)
+      .order("name"),
+  ]);
 
-  const { data: sources } = await supabase
-    .from("income_sources")
-    .select("id, name")
-    .eq("user_id", user.id)
-    .eq("is_archived", false)
-    .order("name");
+  const categories = categoriesRes.data;
+  const sources = sourcesRes.data;
 
   return (
     <div className="py-4">
