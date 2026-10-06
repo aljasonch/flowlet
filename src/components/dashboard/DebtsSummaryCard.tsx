@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { usePrivacyMode } from "@/lib/privacy";
 import Link from "next/link";
 import { ArrowRight, Scale, AlertCircle } from "lucide-react";
 import { formatIDR } from "@/lib/format";
@@ -18,8 +21,10 @@ export function DebtsSummaryCard({
   unpaidDebtCount,
   unpaidReceivableCount,
   overdueCount,
-  hideNumbers = false,
+  hideNumbers: hideProp,
 }: DebtsSummaryCardProps) {
+  const privacy = usePrivacyMode();
+  const hideNumbers = hideProp ?? privacy;
   const debtBig = BigInt(totalUnpaidDebt);
   const receivableBig = BigInt(totalUnpaidReceivable);
 

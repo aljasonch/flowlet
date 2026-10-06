@@ -37,7 +37,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 7. **Dates are plain `YYYY-MM-DD` strings.** Never use `new Date("YYYY-MM-DD")` for logic (it parses as UTC and shifts days).
 8. **Aggregations happen in SQL** (RPC functions), never by downloading all rows into the app to sum them.
 9. **Validate all input on the server with `zod`.** Client-side validation is for user experience only.
-10. **Authorize on the server.** Every Server Action and Route Handler calls `supabase.auth.getUser()` and rejects when there is no user. Middleware redirects are a convenience, never the only protection.
+10. **Authorize on the server.** Every Server Action and Route Handler calls `supabase.auth.getUser()` (verified against the Auth server) and rejects when there is no user. Middleware and the cached `getUser()` helper in `src/lib/supabase/server.ts` use `supabase.auth.getClaims()` (local JWT verification, no network round trip) and expose only the user id (`claims.sub`); this is for read-only page rendering and redirects. Never use `getSession()` for authorization. Enable asymmetric JWT signing keys in Supabase, otherwise `getClaims()` falls back to a network call.
 11. **Check the docs for installed versions.** Next.js and `@supabase/ssr` APIs change between versions. Read the current official docs for the installed versions before writing auth, middleware/proxy, caching or route-handler code. Do not rely on memory for API names.
 12. **No gradients and no emojis, anywhere.** Enforced by `npm run check:design` (section 9.6).
 13. **Do not add dependencies** beyond the approved list in section 3 without asking.
@@ -670,7 +670,10 @@ If a legitimate typographic character is flagged (for example a copyright sign o
 - Utility class `.num` applies `font-variant-numeric: tabular-nums` and is used on every amount, quantity and percentage.
 - Sentence case everywhere. No all-caps labels with wide letter-spacing.
 - Icons: `lucide-react` only, stroke width 1.75, sizes 18 or 20 px. Icon-only buttons need an `aria-label`.
-- **App shell:** persistent glass sidebar at 1024px and wider; glass bottom tab bar on mobile with four tabs (Dashboard, Transactions, Portfolio, Settings). On mobile an "Add" action is reachable within one tap from every screen.
+- **App shell:** persistent glass sidebar at 1024px and wider; on mobile a glass bottom tab bar with five slots in a fixed-height row: Dashboard, Transactions, a centre "Add" button, Debts, Portfolio. Settings is reached from the icon in the mobile top bar. The tab bar pads for `env(safe-area-inset-bottom)`, so the root layout exports `viewport` with `viewportFit: "cover"`. The "Add" action is reachable within one tap from every screen.
+- **Toasts:** on mobile they span the viewport width (`inset-x-3`) at the top, below the safe area, so they never cover the tab bar or form buttons; from 640px up they sit bottom-right with `max-w-sm`.
+- **Privacy (eye) toggle:** state lives in `src/lib/privacy.ts` (localStorage plus `useSyncExternalStore`). Dashboard cards and charts read it themselves via `usePrivacyMode()` when no `hideNumbers` prop is passed, because streamed server widgets cannot receive it from `DashboardView`. Any new component that shows money must honor it.
+- **Navigation speed:** `next.config.ts` sets `experimental.staleTimes` (`dynamic: 30`, `static: 180`) so recently visited pages come from the client cache. Every Server Action that mutates data must call `revalidatePath`, which purges that cache. Keep the number of sequential Supabase round trips per page to a minimum and run independent queries in `Promise.all`.
 - **Components:**
   - Primary button: solid `--accent` fill, `--accent-contrast` text. Secondary: glass with 1px border. One primary action per screen.
   - Accent color only for primary actions, links, active navigation, focus rings and the first chart series.

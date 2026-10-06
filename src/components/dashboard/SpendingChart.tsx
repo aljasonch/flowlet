@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useSyncExternalStore } from "react";
+import { usePrivacyMode } from "@/lib/privacy";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { formatIDR } from "@/lib/format";
 
@@ -25,7 +26,9 @@ const PALETTE = [
   "var(--chart-5)",
 ];
 
-export function SpendingChart({ data, hideNumbers = false }: SpendingChartProps) {
+export function SpendingChart({ data, hideNumbers: hideProp }: SpendingChartProps) {
+  const privacy = usePrivacyMode();
+  const hideNumbers = hideProp ?? privacy;
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const totalExpense = data.reduce((sum, item) => sum + item.total, 0);
 

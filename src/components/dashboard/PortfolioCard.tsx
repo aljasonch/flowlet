@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { usePrivacyMode } from "@/lib/privacy";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, ArrowDownRight, Briefcase } from "lucide-react";
 import { formatIDR, formatPercent } from "@/lib/format";
@@ -18,8 +21,10 @@ export function PortfolioCard({
   totalGainIdr,
   pricedCount,
   unpricedCount,
-  hideNumbers = false,
+  hideNumbers: hideProp,
 }: PortfolioCardProps) {
+  const privacy = usePrivacyMode();
+  const hideNumbers = hideProp ?? privacy;
   const valueBig = BigInt(totalValueIdr);
   const costBig = BigInt(totalCostIdr);
   const gainBig = BigInt(totalGainIdr);

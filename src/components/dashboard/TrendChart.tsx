@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useSyncExternalStore } from "react";
+import { usePrivacyMode } from "@/lib/privacy";
 import {
   BarChart,
   Bar,
@@ -44,7 +45,9 @@ function formatCompactIDR(value: number): string {
   return String(value);
 }
 
-export function TrendChart({ data, hideNumbers = false }: TrendChartProps) {
+export function TrendChart({ data, hideNumbers: hideProp }: TrendChartProps) {
+  const privacy = usePrivacyMode();
+  const hideNumbers = hideProp ?? privacy;
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   const formattedData = data.map((item) => ({

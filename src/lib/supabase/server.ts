@@ -31,10 +31,8 @@ export async function createClient() {
 
 export const getUser = cache(async () => {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  return user;
+  const { data } = await supabase.auth.getClaims();
+  return data?.claims.sub ? { id: data.claims.sub } : null;
 });
 
 export const getDebtsSummary = cache(async () => {

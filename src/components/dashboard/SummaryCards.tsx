@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { usePrivacyMode } from "@/lib/privacy";
 import { formatIDR } from "@/lib/format";
 
 interface SummaryCardsProps {
@@ -12,8 +15,10 @@ export function SummaryCards({
   income,
   expenses,
   net,
-  hideNumbers = false,
+  hideNumbers: hideProp,
 }: SummaryCardsProps) {
+  const privacy = usePrivacyMode();
+  const hideNumbers = hideProp ?? privacy;
   const incomeBig = BigInt(income);
   const expensesBig = BigInt(expenses);
   const netBig = BigInt(net);

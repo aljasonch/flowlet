@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { usePrivacyMode } from "@/lib/privacy";
 import { formatIDR } from "@/lib/format";
 
 interface IncomeSourceItem {
@@ -14,8 +17,10 @@ interface IncomeBreakdownProps {
 
 export function IncomeBreakdown({
   data,
-  hideNumbers = false,
+  hideNumbers: hideProp,
 }: IncomeBreakdownProps) {
+  const privacy = usePrivacyMode();
+  const hideNumbers = hideProp ?? privacy;
   const totalIncome = data.reduce((sum, item) => sum + item.total, 0);
 
   if (data.length === 0 || totalIncome === 0) {

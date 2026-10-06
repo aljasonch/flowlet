@@ -159,13 +159,13 @@ export function AppShell({
       {/* Mobile Bottom Tab Bar (Balanced 5-column grid) */}
       <nav
         aria-label="Mobile navigation"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 glass border-t border-[var(--glass-border)] px-2 py-1.5"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 glass !rounded-b-none !rounded-t-[var(--radius-panel)] border-t border-[var(--glass-border)] px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]"
       >
-        <div className="grid grid-cols-5 items-center justify-items-center w-full max-w-lg mx-auto">
+        <div className="grid grid-cols-5 items-center justify-items-center w-full max-w-lg mx-auto h-[52px]">
           {/* Col 1: Dashboard */}
           <Link
             href="/"
-            className={`flex flex-col items-center justify-center w-full py-1 text-[11px] font-medium transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 w-full h-full text-[11px] leading-none font-medium transition-colors ${
               pathname === "/"
                 ? "text-[var(--accent)]"
                 : "text-[var(--text-muted)] hover:text-[var(--text)]"
@@ -178,14 +178,14 @@ export function AppShell({
           {/* Col 2: Transactions */}
           <Link
             href="/transactions"
-            className={`flex flex-col items-center justify-center w-full py-1 text-[11px] font-medium transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 w-full h-full text-[11px] leading-none font-medium transition-colors ${
               pathname.startsWith("/transactions") && pathname !== "/transactions/new"
                 ? "text-[var(--accent)]"
                 : "text-[var(--text-muted)] hover:text-[var(--text)]"
             }`}
           >
             <ArrowLeftRight size={18} strokeWidth={1.75} />
-            <span className="truncate">Transact</span>
+            <span className="truncate">Transactions</span>
           </Link>
 
           {/* Col 3: Quick Add (+) */}
@@ -200,7 +200,7 @@ export function AppShell({
           {/* Col 4: Debts */}
           <Link
             href="/debts"
-            className={`flex flex-col items-center justify-center w-full py-1 text-[11px] font-medium transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 w-full h-full text-[11px] leading-none font-medium transition-colors ${
               pathname.startsWith("/debts")
                 ? "text-[var(--accent)]"
                 : "text-[var(--text-muted)] hover:text-[var(--text)]"
@@ -239,7 +239,7 @@ export function AppShell({
           {/* Col 5: Portfolio */}
           <Link
             href="/portfolio"
-            className={`flex flex-col items-center justify-center w-full py-1 text-[11px] font-medium transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 w-full h-full text-[11px] leading-none font-medium transition-colors ${
               pathname.startsWith("/portfolio")
                 ? "text-[var(--accent)]"
                 : "text-[var(--text-muted)] hover:text-[var(--text)]"

@@ -37,18 +37,18 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
-      <div className="fixed bottom-20 sm:bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+      <div className="fixed z-50 flex flex-col gap-2 pointer-events-none inset-x-3 top-[calc(env(safe-area-inset-top)+0.75rem)] sm:inset-x-auto sm:top-auto sm:bottom-6 sm:right-6 sm:w-full sm:max-w-sm">
         <AnimatePresence>
           {toasts.map((t) => (
             <motion.div
               key={t.id}
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.22, ease: [0.2, 0, 0, 1] }}
-              className="pointer-events-auto glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] p-3.5 shadow-lg flex items-center justify-between gap-3 text-sm text-[var(--text)]"
+              className="pointer-events-auto glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] p-3 sm:p-3.5 shadow-lg flex items-center justify-between gap-3 text-sm text-[var(--text)]"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0">
                 {t.type === "success" && (
                   <CheckCircle2
                     size={18}
