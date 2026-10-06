@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { AppShell } from "@/components/AppShell";
 import { ToastProvider } from "@/components/ui/Toast";
 
@@ -19,9 +19,7 @@ export default async function AppLayout({
   const supabase = await createClient();
 
   console.time("[PERF] layout auth.getUser");
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
   console.timeEnd("[PERF] layout auth.getUser");
 
   if (!user) {

@@ -1,6 +1,6 @@
 import React from "react";
 import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { HoldingForm } from "@/components/portfolio/HoldingForm";
 
 interface EditHoldingPageProps {
@@ -10,9 +10,7 @@ interface EditHoldingPageProps {
 export default async function EditHoldingPage({ params }: EditHoldingPageProps) {
   const { id } = await params;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   if (!user) {
     redirect("/login");

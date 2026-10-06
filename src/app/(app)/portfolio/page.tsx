@@ -1,15 +1,13 @@
 import React from "react";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { PortfolioView } from "@/components/portfolio/PortfolioView";
 import type { PortfolioHoldingRow } from "@/components/portfolio/HoldingList";
 import type { AllocationItem } from "@/components/portfolio/AllocationChart";
 
 export default async function PortfolioPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   if (!user) {
     redirect("/login");

@@ -1,7 +1,7 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { getTodayDate } from "@/lib/today";
 import { getCurrentPeriod } from "@/lib/period";
 import { DashboardView } from "@/components/dashboard/DashboardView";
@@ -15,9 +15,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const supabase = await createClient();
 
   console.time("[PERF] dashboard auth.getUser");
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
   console.timeEnd("[PERF] dashboard auth.getUser");
 
   if (!user) {

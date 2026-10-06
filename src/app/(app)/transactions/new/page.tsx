@@ -1,11 +1,9 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { TransactionForm } from "@/components/transactions/TransactionForm";
 
 export default async function NewTransactionPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
 
   if (!user) return null;
 

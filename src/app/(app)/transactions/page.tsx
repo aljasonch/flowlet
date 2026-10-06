@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { getTodayDate } from "@/lib/today";
 import { periodStart, periodEnd, getCurrentPeriod } from "@/lib/period";
 import { TransactionList } from "@/components/transactions/TransactionList";
@@ -26,9 +26,7 @@ export default async function TransactionsPage({
   const supabase = await createClient();
 
   console.time("[PERF] transactions auth.getUser");
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getUser();
   console.timeEnd("[PERF] transactions auth.getUser");
 
   if (!user) {
