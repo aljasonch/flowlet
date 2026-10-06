@@ -42,6 +42,7 @@ yarn-error.log*
 next-env.d.ts
 
 # docs
-/docs
+/docs/*
+!/docs/db-performance-audit.md
 # superpowers visual companion
 .superpowers/
