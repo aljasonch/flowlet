@@ -20,18 +20,11 @@ export default async function AppLayout({
     redirect("/login");
   }
 
-  console.time("[PERF] layout render total");
-
-  console.time("[PERF] layout auth.getUser");
   const user = await getUser();
-  console.timeEnd("[PERF] layout auth.getUser");
 
   if (!user) {
-    console.timeEnd("[PERF] layout render total");
     redirect("/login");
   }
-
-  console.timeEnd("[PERF] layout render total");
 
   return (
     <ToastProvider>

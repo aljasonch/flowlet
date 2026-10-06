@@ -2,7 +2,6 @@
 -- Allows callers to omit or pass p_start_day explicitly.
 -- If p_start_day is null or omitted, falls back to public.profiles.month_start_day, or 1 if not set.
 -- Preserves backwards compatibility with callers passing (p_year, p_month).
-zz
 -- 1. month_summary
 drop function if exists public.month_summary(int, int);
 drop function if exists public.month_summary(int, int, int);

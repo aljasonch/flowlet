@@ -17,7 +17,6 @@ interface TransactionsPageProps {
 export default async function TransactionsPage({
   searchParams,
 }: TransactionsPageProps) {
-  console.time("[PERF] transactions render total");
   const params = await searchParams;
   const cookieStore = await cookies();
   const tz = cookieStore.get("tz")?.value;
@@ -25,23 +24,18 @@ export default async function TransactionsPage({
 
   const supabase = await createClient();
 
-  console.time("[PERF] transactions auth.getUser");
   const user = await getUser();
-  console.timeEnd("[PERF] transactions auth.getUser");
 
   if (!user) {
-    console.timeEnd("[PERF] transactions render total");
     return null;
   }
 
   // 1. Get user profile for month_start_day
-  console.time("[PERF] transactions profile.select");
   const { data: profile } = await supabase
     .from("profiles")
     .select("month_start_day")
     .eq("user_id", user.id)
     .single();
-  console.timeEnd("[PERF] transactions profile.select");
 
   const startDay = profile?.month_start_day ?? 1;
 
@@ -102,7 +96,6 @@ export default async function TransactionsPage({
     txQuery = txQuery.ilike("note", `%${query.trim()}%`);
   }
 
-  console.time("[PERF] transactions parallel data queries");
   const [{ data: transactions, count }, { data: categories }, { data: sources }] =
     await Promise.all([
       txQuery,
@@ -117,9 +110,6 @@ export default async function TransactionsPage({
         .eq("user_id", user.id)
         .order("name"),
     ]);
-  console.timeEnd("[PERF] transactions parallel data queries");
-
-  console.timeEnd("[PERF] transactions render total");
 
   // Format records to match component props
   const formattedTransactions = (transactions || []).map((t) => ({

@@ -49,28 +49,22 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  console.time("[PERF] middleware total");
-  console.time("[PERF] middleware auth.getUser");
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.timeEnd("[PERF] middleware auth.getUser");
 
   if (!user && !isLoginPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
-    console.timeEnd("[PERF] middleware total");
     return NextResponse.redirect(url);
   }
 
   if (user && isLoginPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
-    console.timeEnd("[PERF] middleware total");
     return NextResponse.redirect(url);
   }
 
-  console.timeEnd("[PERF] middleware total");
   return supabaseResponse;
 }
 

@@ -23,14 +23,9 @@ interface DashboardPageProps {
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
-  console.time("[PERF] dashboard render total");
-
-  console.time("[PERF] dashboard auth.getUser");
   const user = await getUser();
-  console.timeEnd("[PERF] dashboard auth.getUser");
 
   if (!user) {
-    console.timeEnd("[PERF] dashboard render total");
     redirect("/login");
   }
 
@@ -40,9 +35,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const today = getTodayDate(tz);
 
   // Fetch cached month_start_day
-  console.time("[PERF] dashboard profile.select");
   const monthStartDay = await getMonthStartDay();
-  console.timeEnd("[PERF] dashboard profile.select");
 
   const currentPeriod = getCurrentPeriod(today, monthStartDay);
 
@@ -61,8 +54,6 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       month = parsedM;
     }
   }
-
-  console.timeEnd("[PERF] dashboard render total");
 
   return (
     <DashboardView
