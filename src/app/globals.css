@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #E9EDF1;
+  --shape-a: #BFCBD8;
+  --shape-b: #D9D0C3;
+  --shape-c: #C6D5CB;
+
+  --glass: rgba(255, 255, 255, 0.48);
+  --glass-strong: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-shadow: 0 10px 30px 0 rgba(15, 23, 42, 0.08), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 1px 0 rgba(255, 255, 255, 0.25);
+  --blur: 20px;
+
+  --text: #14181D;
+  --text-muted: #4A5560;
+  --accent: #1F5FBF;
+  --accent-contrast: #FFFFFF;
+  --positive: #1B7A4B;
+  --negative: #B3261E;
+
+  --chart-1: #1F5FBF;
+  --chart-2: #6B7C8F;
+  --chart-3: #8FA3B8;
+  --chart-4: #A68A57;
+  --chart-5: #5E8C74;
+
+  --radius-panel: 22px;
+  --radius-control: 12px;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 160ms;
+  --dur-base: 240ms;
+  --dur-slow: 340ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0E1216;
+    --shape-a: #1E2C3B;
+    --shape-b: #2E2A25;
+    --shape-c: #1F3029;
+
+    --glass: rgba(22, 28, 36, 0.50);
+    --glass-strong: rgba(26, 34, 44, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.16);
+    --glass-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.50), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.35);
+
+    --text: #EDF1F5;
+    --text-muted: #A3AFBB;
+    --accent: #7FB0F5;
+    --accent-contrast: #0E1216;
+    --positive: #5FCB92;
+    --negative: #F28B82;
+
+    --chart-1: #7FB0F5;
+    --chart-2: #94A3B3;
+    --chart-3: #6E8196;
+    --chart-4: #C9AD78;
+    --chart-5: #7FB59A;
+  }
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ibm-plex-sans), sans-serif;
+  min-height: 100vh;
+}
+
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(190%) contrast(105%);
+  backdrop-filter: blur(var(--blur)) saturate(190%) contrast(105%);
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.glass-strong {
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-strong {
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--glass-strong);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--glass-strong);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.enter {
+  animation: enter var(--dur-base) var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 30ms);
+}
+
+@keyframes pulse-opacity {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.skeleton-pulse {
+  animation: pulse-opacity 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+  .skeleton-pulse {
+    animation: none;
+  }
+}
