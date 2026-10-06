@@ -1,10 +1,22 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { createClient, getUser, getDebtsSummary } from "@/lib/supabase/server";
+import { getUser, getMonthStartDay } from "@/lib/supabase/server";
 import { getTodayDate } from "@/lib/today";
 import { getCurrentPeriod } from "@/lib/period";
 import { DashboardView } from "@/components/dashboard/DashboardView";
+import {
+  MonthSummaryWidget,
+  PortfolioSummaryWidget,
+  DebtsSummaryWidget,
+  SpendingByCategoryWidget,
+  IncomeBySourceWidget,
+  MonthlyTrendWidget,
+  SummaryCardsSkeleton,
+  PortfolioCardSkeleton,
+  DebtsCardSkeleton,
+  ChartSkeleton,
+} from "@/components/dashboard/DashboardWidgets";
 
 interface DashboardPageProps {
   searchParams: Promise<{ month?: string }>;
@@ -12,7 +24,6 @@ interface DashboardPageProps {
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   console.time("[PERF] dashboard render total");
-  const supabase = await createClient();
 
   console.time("[PERF] dashboard auth.getUser");
   const user = await getUser();
@@ -28,16 +39,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const tz = cookieStore.get("tz")?.value;
   const today = getTodayDate(tz);
 
-  // Fetch user profile for month_start_day
+  // Fetch cached month_start_day
   console.time("[PERF] dashboard profile.select");
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("month_start_day")
-    .eq("user_id", user.id)
-    .single();
+  const monthStartDay = await getMonthStartDay();
   console.timeEnd("[PERF] dashboard profile.select");
 
-  const monthStartDay = profile?.month_start_day ?? 1;
   const currentPeriod = getCurrentPeriod(today, monthStartDay);
 
   const resolvedParams = await searchParams;
@@ -56,39 +62,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     }
   }
 
-  // Fetch data in parallel via SQL RPC functions
-  console.time("[PERF] dashboard parallel RPCs");
-  const [summaryRes, categoriesRes, sourcesRes, trendRes, portfolioRes, debtsSummary] =
-    await Promise.all([
-      supabase.rpc("month_summary", { p_year: year, p_month: month }),
-      supabase.rpc("spending_by_category", { p_year: year, p_month: month }),
-      supabase.rpc("income_by_source", { p_year: year, p_month: month }),
-      supabase.rpc("monthly_trend", {
-        p_year: year,
-        p_month: month,
-        p_months: 6,
-      }),
-      supabase.rpc("portfolio_summary"),
-      getDebtsSummary(),
-    ]);
-  console.timeEnd("[PERF] dashboard parallel RPCs");
   console.timeEnd("[PERF] dashboard render total");
-
-  const summary = summaryRes.data?.[0] ?? {
-    total_income: 0,
-    total_expense: 0,
-    net: 0,
-  };
-  const categories = categoriesRes.data ?? [];
-  const sources = sourcesRes.data ?? [];
-  const trend = trendRes.data ?? [];
-  const portfolioSummary = portfolioRes.data?.[0] ?? {
-    total_value_idr: 0,
-    total_cost_idr: 0,
-    total_gain_idr: 0,
-    priced_count: 0,
-    unpriced_count: 0,
-  };
 
   return (
     <DashboardView
@@ -97,12 +71,36 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
       monthStartDay={monthStartDay}
       currentPeriodYear={currentPeriod.year}
       currentPeriodMonth={currentPeriod.month}
-      summary={summary}
-      categories={categories}
-      sources={sources}
-      trend={trend}
-      portfolioSummary={portfolioSummary}
-      debtsSummary={debtsSummary}
+      summarySlot={
+        <Suspense fallback={<SummaryCardsSkeleton />}>
+          <MonthSummaryWidget year={year} month={month} />
+        </Suspense>
+      }
+      portfolioSlot={
+        <Suspense fallback={<PortfolioCardSkeleton />}>
+          <PortfolioSummaryWidget />
+        </Suspense>
+      }
+      debtsSlot={
+        <Suspense fallback={<DebtsCardSkeleton />}>
+          <DebtsSummaryWidget />
+        </Suspense>
+      }
+      spendingSlot={
+        <Suspense fallback={<ChartSkeleton />}>
+          <SpendingByCategoryWidget year={year} month={month} />
+        </Suspense>
+      }
+      incomeSlot={
+        <Suspense fallback={<ChartSkeleton />}>
+          <IncomeBySourceWidget year={year} month={month} />
+        </Suspense>
+      }
+      trendSlot={
+        <Suspense fallback={<ChartSkeleton />}>
+          <MonthlyTrendWidget year={year} month={month} />
+        </Suspense>
+      }
     />
   );
 }

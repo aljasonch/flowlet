@@ -51,4 +51,17 @@ export const getDebtsSummary = cache(async () => {
   );
 });
 
+export const getMonthStartDay = cache(async () => {
+  const user = await getUser();
+  if (!user) return 1;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("profiles")
+    .select("month_start_day")
+    .eq("user_id", user.id)
+    .single();
+  return data?.month_start_day ?? 1;
+});
+
+
 
