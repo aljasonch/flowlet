@@ -1,7 +1,7 @@
 import React from "react";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { createClient, getUser } from "@/lib/supabase/server";
+import { createClient, getUser, getDebtsSummary } from "@/lib/supabase/server";
 import { getTodayDate } from "@/lib/today";
 import { getCurrentPeriod } from "@/lib/period";
 import { DashboardView } from "@/components/dashboard/DashboardView";
@@ -58,7 +58,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   // Fetch data in parallel via SQL RPC functions
   console.time("[PERF] dashboard parallel RPCs");
-  const [summaryRes, categoriesRes, sourcesRes, trendRes, portfolioRes, debtsRes] =
+  const [summaryRes, categoriesRes, sourcesRes, trendRes, portfolioRes, debtsSummary] =
     await Promise.all([
       supabase.rpc("month_summary", { p_year: year, p_month: month }),
       supabase.rpc("spending_by_category", { p_year: year, p_month: month }),
@@ -69,7 +69,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         p_months: 6,
       }),
       supabase.rpc("portfolio_summary"),
-      supabase.rpc("debts_summary"),
+      getDebtsSummary(),
     ]);
   console.timeEnd("[PERF] dashboard parallel RPCs");
   console.timeEnd("[PERF] dashboard render total");
@@ -88,13 +88,6 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     total_gain_idr: 0,
     priced_count: 0,
     unpriced_count: 0,
-  };
-  const debtsSummary = debtsRes.data?.[0] ?? {
-    total_unpaid_debt: 0,
-    total_unpaid_receivable: 0,
-    unpaid_debt_count: 0,
-    unpaid_receivable_count: 0,
-    overdue_count: 0,
   };
 
   return (

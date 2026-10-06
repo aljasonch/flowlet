@@ -1,4 +1,4 @@
-import { createClient, getUser } from "@/lib/supabase/server";
+import { createClient, getUser, getDebtsSummary } from "@/lib/supabase/server";
 import { DebtView } from "@/components/debts/DebtView";
 
 export default async function DebtsPage() {
@@ -8,7 +8,7 @@ export default async function DebtsPage() {
   if (!user) return null;
 
   // Load categories, sources, debts, and summary in parallel
-  const [categoriesRes, sourcesRes, debtsRes, summaryRes] = await Promise.all([
+  const [categoriesRes, sourcesRes, debtsRes, summary] = await Promise.all([
     supabase
       .from("categories")
       .select("id, name")
@@ -20,7 +20,7 @@ export default async function DebtsPage() {
       .eq("user_id", user.id)
       .order("name"),
     supabase.rpc("debts_with_balance"),
-    supabase.rpc("debts_summary"),
+    getDebtsSummary(),
   ]);
 
   const categories = categoriesRes.data || [];
@@ -32,14 +32,6 @@ export default async function DebtsPage() {
     paid_amount: Number(d.paid_amount),
     remaining_amount: Number(d.remaining_amount),
   }));
-
-  const summary = summaryRes.data?.[0] ?? {
-    total_unpaid_debt: 0,
-    total_unpaid_receivable: 0,
-    unpaid_debt_count: 0,
-    unpaid_receivable_count: 0,
-    overdue_count: 0,
-  };
 
   return (
     <div className="space-y-6">

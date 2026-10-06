@@ -1,7 +1,12 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { createClient, getUser } from "@/lib/supabase/server";
+import { getUser } from "@/lib/supabase/server";
 import { AppShell } from "@/components/AppShell";
 import { ToastProvider } from "@/components/ui/Toast";
+import {
+  DesktopDebtsBadge,
+  MobileDebtsBadge,
+} from "@/components/debts/DebtsNavBadges";
 
 export default async function AppLayout({
   children,
@@ -16,7 +21,6 @@ export default async function AppLayout({
   }
 
   console.time("[PERF] layout render total");
-  const supabase = await createClient();
 
   console.time("[PERF] layout auth.getUser");
   const user = await getUser();
@@ -27,22 +31,21 @@ export default async function AppLayout({
     redirect("/login");
   }
 
-  console.time("[PERF] layout debts_summary");
-  const { data: debtsSummaryRes } = await supabase.rpc("debts_summary");
-  console.timeEnd("[PERF] layout debts_summary");
-
-  const debtsSummary = debtsSummaryRes?.[0] ?? {
-    unpaid_debt_count: 0,
-    unpaid_receivable_count: 0,
-  };
-
   console.timeEnd("[PERF] layout render total");
 
   return (
     <ToastProvider>
       <AppShell
-        unpaidDebtCount={debtsSummary.unpaid_debt_count}
-        unpaidReceivableCount={debtsSummary.unpaid_receivable_count}
+        desktopDebtsBadge={
+          <Suspense fallback={null}>
+            <DesktopDebtsBadge />
+          </Suspense>
+        }
+        mobileDebtsBadge={
+          <Suspense fallback={null}>
+            <MobileDebtsBadge />
+          </Suspense>
+        }
       >
         {children}
       </AppShell>

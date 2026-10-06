@@ -37,3 +37,18 @@ export const getUser = cache(async () => {
   return user;
 });
 
+export const getDebtsSummary = cache(async () => {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("debts_summary");
+  return (
+    data?.[0] ?? {
+      total_unpaid_debt: 0,
+      total_unpaid_receivable: 0,
+      unpaid_debt_count: 0,
+      unpaid_receivable_count: 0,
+      overdue_count: 0,
+    }
+  );
+});
+
+

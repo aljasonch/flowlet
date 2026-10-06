@@ -27,12 +27,16 @@ export interface AppShellProps {
   children: React.ReactNode;
   unpaidDebtCount?: number;
   unpaidReceivableCount?: number;
+  desktopDebtsBadge?: React.ReactNode;
+  mobileDebtsBadge?: React.ReactNode;
 }
 
 export function AppShell({
   children,
   unpaidDebtCount = 0,
   unpaidReceivableCount = 0,
+  desktopDebtsBadge,
+  mobileDebtsBadge,
 }: AppShellProps) {
   const pathname = usePathname();
 
@@ -103,26 +107,31 @@ export function AppShell({
                   <span>{item.label}</span>
 
                   {/* Debt & Receivable badges on desktop */}
-                  {hasDebtsNotice && (
-                    <div className="ml-auto flex items-center gap-1.5 shrink-0">
-                      {unpaidDebtCount > 0 && (
-                        <span
-                          className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[var(--negative)] text-white shadow-xs"
-                          title={`${unpaidDebtCount} unpaid debts`}
-                        >
-                          {unpaidDebtCount}
-                        </span>
-                      )}
-                      {unpaidReceivableCount > 0 && (
-                        <span
-                          className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[var(--positive)] text-white shadow-xs"
-                          title={`${unpaidReceivableCount} unpaid receivables`}
-                        >
-                          {unpaidReceivableCount}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  {isDebts &&
+                    (desktopDebtsBadge !== undefined ? (
+                      desktopDebtsBadge
+                    ) : (
+                      hasDebtsNotice && (
+                        <div className="ml-auto flex items-center gap-1.5 shrink-0">
+                          {unpaidDebtCount > 0 && (
+                            <span
+                              className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[var(--negative)] text-white shadow-xs"
+                              title={`${unpaidDebtCount} unpaid debts`}
+                            >
+                              {unpaidDebtCount}
+                            </span>
+                          )}
+                          {unpaidReceivableCount > 0 && (
+                            <span
+                              className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[var(--positive)] text-white shadow-xs"
+                              title={`${unpaidReceivableCount} unpaid receivables`}
+                            >
+                              {unpaidReceivableCount}
+                            </span>
+                          )}
+                        </div>
+                      )
+                    ))}
                 </Link>
               );
             })}
@@ -199,25 +208,29 @@ export function AppShell({
           >
             <div className="relative">
               <Scale size={18} strokeWidth={1.75} />
-              {(unpaidDebtCount > 0 || unpaidReceivableCount > 0) && (
-                <div className="absolute -top-1.5 -right-3 flex items-center gap-0.5">
-                  {unpaidDebtCount > 0 && (
-                    <span
-                      className="text-[9px] font-bold px-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--negative)] text-white shadow-xs leading-none"
-                      title={`${unpaidDebtCount} unpaid debts`}
-                    >
-                      {unpaidDebtCount}
-                    </span>
-                  )}
-                  {unpaidReceivableCount > 0 && (
-                    <span
-                      className="text-[9px] font-bold px-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--positive)] text-white shadow-xs leading-none"
-                      title={`${unpaidReceivableCount} unpaid receivables`}
-                    >
-                      {unpaidReceivableCount}
-                    </span>
-                  )}
-                </div>
+              {mobileDebtsBadge !== undefined ? (
+                mobileDebtsBadge
+              ) : (
+                (unpaidDebtCount > 0 || unpaidReceivableCount > 0) && (
+                  <div className="absolute -top-1.5 -right-3 flex items-center gap-0.5">
+                    {unpaidDebtCount > 0 && (
+                      <span
+                        className="text-[9px] font-bold px-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--negative)] text-white shadow-xs leading-none"
+                        title={`${unpaidDebtCount} unpaid debts`}
+                      >
+                        {unpaidDebtCount}
+                      </span>
+                    )}
+                    {unpaidReceivableCount > 0 && (
+                      <span
+                        className="text-[9px] font-bold px-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--positive)] text-white shadow-xs leading-none"
+                        title={`${unpaidReceivableCount} unpaid receivables`}
+                      >
+                        {unpaidReceivableCount}
+                      </span>
+                    )}
+                  </div>
+                )
               )}
             </div>
             <span className="truncate">Debts</span>
