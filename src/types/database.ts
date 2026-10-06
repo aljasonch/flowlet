@@ -312,7 +312,7 @@ export interface Database {
         Returns: string;
       };
       month_summary: {
-        Args: { p_year: number; p_month: number };
+        Args: { p_year: number; p_month: number; p_start_day?: number | null };
         Returns: {
           total_income: number;
           total_expense: number;
@@ -320,7 +320,7 @@ export interface Database {
         }[];
       };
       spending_by_category: {
-        Args: { p_year: number; p_month: number };
+        Args: { p_year: number; p_month: number; p_start_day?: number | null };
         Returns: {
           category_id: string;
           name: string;
@@ -328,7 +328,7 @@ export interface Database {
         }[];
       };
       income_by_source: {
-        Args: { p_year: number; p_month: number };
+        Args: { p_year: number; p_month: number; p_start_day?: number | null };
         Returns: {
           source_id: string;
           name: string;
@@ -336,7 +336,7 @@ export interface Database {
         }[];
       };
       monthly_trend: {
-        Args: { p_year: number; p_month: number; p_months?: number };
+        Args: { p_year: number; p_month: number; p_months?: number; p_start_day?: number | null };
         Returns: {
           year: number;
           month: number;
