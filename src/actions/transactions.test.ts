@@ -131,6 +131,16 @@ describe("Transactions Server Actions", () => {
       });
       expect(res.success).toBe(true);
     });
+
+    it("rejects invalid transaction id on update", async () => {
+      const res = await updateTransaction("invalid-uuid", {
+        type: "expense",
+        amount: 80000,
+        date: "2026-10-06",
+        category_id: "123e4567-e89b-12d3-a456-426614174000",
+      });
+      expect(res.error).toBe("Invalid transaction ID");
+    });
   });
 
   describe("deleteTransaction", () => {
@@ -138,5 +148,11 @@ describe("Transactions Server Actions", () => {
       const res = await deleteTransaction("123e4567-e89b-12d3-a456-426614174002");
       expect(res.success).toBe(true);
     });
+
+    it("rejects invalid transaction id on delete", async () => {
+      const res = await deleteTransaction("invalid-uuid");
+      expect(res.error).toBe("Invalid transaction ID");
+    });
   });
 });
+

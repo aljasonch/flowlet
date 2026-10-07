@@ -53,6 +53,8 @@ const transactionSchema = z.discriminatedUnion("type", [
 
 export type TransactionInput = z.infer<typeof transactionSchema>;
 
+const idSchema = z.string().uuid("Invalid transaction ID");
+
 export async function createTransaction(
   data: TransactionInput
 ): Promise<ActionResult> {
@@ -84,7 +86,7 @@ export async function createTransaction(
   const { error } = await supabase.from("transactions").insert(payload);
 
   if (error) {
-    return { error: error.message };
+    return { error: "Failed to create transaction" };
   }
 
   revalidatePath("/transactions");
@@ -97,6 +99,11 @@ export async function updateTransaction(
   id: string,
   data: TransactionInput
 ): Promise<ActionResult> {
+  const parsedId = idSchema.safeParse(id);
+  if (!parsedId.success) {
+    return { error: parsedId.error.issues[0]?.message ?? "Invalid transaction ID" };
+  }
+
   const parsed = transactionSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid transaction" };
@@ -124,11 +131,11 @@ export async function updateTransaction(
   const { error } = await supabase
     .from("transactions")
     .update(payload)
-    .eq("id", id)
+    .eq("id", parsedId.data)
     .eq("user_id", user.id);
 
   if (error) {
-    return { error: error.message };
+    return { error: "Failed to update transaction" };
   }
 
   revalidatePath("/transactions");
@@ -138,6 +145,11 @@ export async function updateTransaction(
 }
 
 export async function deleteTransaction(id: string): Promise<ActionResult> {
+  const parsedId = idSchema.safeParse(id);
+  if (!parsedId.success) {
+    return { error: parsedId.error.issues[0]?.message ?? "Invalid transaction ID" };
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -150,11 +162,11 @@ export async function deleteTransaction(id: string): Promise<ActionResult> {
   const { error } = await supabase
     .from("transactions")
     .delete()
-    .eq("id", id)
+    .eq("id", parsedId.data)
     .eq("user_id", user.id);
 
   if (error) {
-    return { error: error.message };
+    return { error: "Failed to delete transaction" };
   }
 
   revalidatePath("/transactions");
