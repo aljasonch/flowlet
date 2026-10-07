@@ -40,8 +40,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# docs, supabase, scripts
-/docs
-/supabase
-/scripts
+
