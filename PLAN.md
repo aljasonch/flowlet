@@ -1,24 +1,25 @@
-# PLAN: All Tasks Completed (T0 — T20)
+# PLAN: All Tasks Completed (T0 — T21)
 
 ## Project Status: Production Ready
-All planned tasks for Flowlet (Agent Build Spec v0.4), live exchange rates, flexible decimal pricing, per-asset allocation charts, privacy hide-numbers mode, debt/receivable management, iOS Liquid Glass styling with mobile optimizations, and official brand logo integration have been implemented, tested, and verified against every hard rule, security standard, and design constraint.
+All planned tasks for Flowlet (Agent Build Spec v0.4), live exchange rates, flexible decimal pricing, per-asset allocation charts, privacy hide-numbers mode, debt/receivable management, iOS Liquid Glass styling with mobile optimizations, official brand logo integration, and transactions page performance/summary optimization have been implemented, tested, and verified against every hard rule, security standard, and design constraint.
 
 ## Deliverables Summary
 - Cash flow tracking with custom month start day, integer Rupiah (`bigint`), categories, and income sources.
+- Transactions page performance and UX improvements: composite index (`0005_transactions_indexes.sql`), parallel queries, cached profile lookups, sanitized search queries, server-side parameter validation, lightweight period summary hero cards via `month_summary` RPC, and scroll-preserving `limit + 1` pagination.
 - Portfolio snapshot with exact decimal mathematics via Postgres `numeric` and `decimal.js`, manual prices, automated crypto price feeds via CoinGecko, live USD/IDR exchange rates, and flexible decimal price formatting.
 - Dedicated Debts & Receivables tracking (`/debts`, `0003_debts.sql`) with partial payments, automatic cash-flow integration, side-panel active count badges, and on-page nominal privacy toggle.
 - Apple iOS Liquid Glass design system: clean canvas background shapes, translucent components with specular rim highlights, and frosted `.glass-strong` controls without forbidden gradients.
 - Mobile layout optimizations: locked desktop sidebar width, balanced 5-column bottom navigation bar, top-right Settings header button, consolidated cash flow hero card, and tabbed chart views.
-- Synchronized privacy hide-numbers mode across Portfolio, Dashboard, and Debts via `src/lib/privacy.ts`.
+- Synchronized privacy hide-numbers mode across Portfolio, Dashboard, Debts, and Transactions summary cards via `src/lib/privacy.ts`.
 - Multi-tenant Row Level Security on all tables without using the Supabase `service_role` key.
 - Performance benchmark script (`scripts/seed-perf.ts`) verifying dashboard queries under 2 seconds with 3,000 transactions.
 - Official Flowlet brand logo ("Streamline Fluid F"), vector SVG asset (`public/icon.svg`), reusable UI `Logo` component (`src/components/ui/Logo.tsx`) with customizable sizing and text visibility, integrated seamlessly across AppShell desktop/mobile and the authentication login screen.
 
 ## Verification Summary
-- `npm run check:design`: Scanned 86 files, 0 gradients, 0 emojis.
-- `npm run lint`: 0 errors, 0 warnings.
+- `npm run check:design`: Scanned 93 files, 0 gradients, 0 emojis.
+- `npx eslint .`: 0 errors, 0 warnings.
 - `npm run typecheck`: 0 TypeScript compiler errors across strict mode codebase.
-- `npx vitest run`: 97/97 unit and integration tests passing across 19 test files.
+- `npm run test`: 104/104 unit and integration tests passing across 20 test files.
 - `npm run build`: Production Next.js build compiled and optimized cleanly with static and dynamic server routes.
 
 ## Completed Log
@@ -32,3 +33,5 @@ All planned tasks for Flowlet (Agent Build Spec v0.4), live exchange rates, flex
 - T18: 2026-10-05, component-centric liquid glass refinement, fixed sticky desktop sidebar, balanced 5-column mobile nav, debts privacy toggle, and consolidated mobile dashboard layout
 - T19: 2026-10-05, consolidated mobile portfolio summary hero card and tabbed segmented toggle for allocation charts to eliminate mobile vertical scrolling waste
 - T20: 2026-10-05, official Flowlet brand logo ("Streamline Fluid F"), vector SVG asset, reusable Logo component, AppShell and login page integration
+- T21: 2026-10-08, transactions page performance optimization (composite & partial indexes 0005, parallel fetching, month_summary integration, search escaping, Zod parameter validation, scroll-free pagination, removed motion layout thrashing)
+
