@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseAmountInput, parseDecimalInput } from "./parse";
+import { parseAmountInput, parseDecimalInput, escapeIlike } from "./parse";
 
 describe("parseAmountInput", () => {
   it("parses formatted rupiah into integer", () => {
@@ -36,3 +36,13 @@ describe("parseDecimalInput", () => {
     expect(parseDecimalInput("1,2,3")).toBeNull();
   });
 });
+
+describe("escapeIlike", () => {
+  it("escapes %, _, and \\ characters", () => {
+    expect(escapeIlike("100%")).toBe("100\\%");
+    expect(escapeIlike("food_drink")).toBe("food\\_drink");
+    expect(escapeIlike("back\\slash")).toBe("back\\\\slash");
+    expect(escapeIlike("normal text 123")).toBe("normal text 123");
+  });
+});
+

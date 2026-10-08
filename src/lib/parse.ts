@@ -30,3 +30,8 @@ export function parseDecimalInput(input: string): string | null {
 
   return normalized;
 }
+
+export function escapeIlike(input: string): string {
+  return input.replace(/[%_\\]/g, "\\$&");
+}
+

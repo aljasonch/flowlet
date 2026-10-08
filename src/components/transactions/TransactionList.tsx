@@ -8,6 +8,7 @@ import { Edit2, Trash2, Search, Plus, Filter } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import { useToast } from "@/components/ui/Toast";
+import { SummaryCards } from "@/components/dashboard/SummaryCards";
 import { formatIDR } from "@/lib/format";
 import { deleteTransaction } from "@/actions/transactions";
 
@@ -26,12 +27,19 @@ interface FilterOption {
   name: string;
 }
 
+export interface PeriodSummary {
+  total_income: number | bigint;
+  total_expense: number | bigint;
+  net: number | bigint;
+}
+
 export interface TransactionListProps {
   initialTransactions: TransactionListItem[];
   categories: FilterOption[];
   sources: FilterOption[];
   currentPeriodLabel: string;
-  totalCount: number;
+  hasMore: boolean;
+  periodSummary?: PeriodSummary;
 }
 
 export function TransactionList({
@@ -39,7 +47,8 @@ export function TransactionList({
   categories,
   sources,
   currentPeriodLabel,
-  totalCount,
+  hasMore,
+  periodSummary,
 }: TransactionListProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -76,7 +85,7 @@ export function TransactionList({
     }
     // Reset limit
     params.delete("limit");
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -90,7 +99,7 @@ export function TransactionList({
     const params = new URLSearchParams(searchParams.toString());
     const currentLimit = parseInt(params.get("limit") || "50", 10);
     params.set("limit", String(currentLimit + 50));
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const confirmDelete = async () => {
@@ -119,7 +128,7 @@ export function TransactionList({
         <div>
           <h1 className="text-2xl font-semibold text-[var(--text)]">Transactions</h1>
           <p className="text-xs text-[var(--text-muted)] mt-1">
-            Period: {selectedMonth} ({totalCount} total)
+            Period: {selectedMonth}
           </p>
         </div>
         <Link
@@ -130,6 +139,15 @@ export function TransactionList({
           <span>Add transaction</span>
         </Link>
       </div>
+
+      {/* Period Summary Cards */}
+      {periodSummary && (
+        <SummaryCards
+          income={periodSummary.total_income}
+          expenses={periodSummary.total_expense}
+          net={periodSummary.net}
+        />
+      )}
 
       {/* Filter and Search Bar */}
       <div className="glass p-4 rounded-[var(--radius-panel)] border border-[var(--glass-border)] space-y-3">
@@ -241,7 +259,6 @@ export function TransactionList({
                 return (
                   <motion.li
                     key={tx.id}
-                    layout
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, height: 0, overflow: "hidden" }}
@@ -303,7 +320,7 @@ export function TransactionList({
         )}
 
         {/* Load More Button */}
-        {optimisticTransactions.length < totalCount && (
+        {hasMore && (
           <div className="p-4 border-t border-[var(--glass-border)] text-center">
             <Button variant="secondary" size="sm" onClick={handleLoadMore}>
               Load more transactions
