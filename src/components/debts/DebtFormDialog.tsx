@@ -76,17 +76,17 @@ export function DebtFormDialog({
       <form onSubmit={handleSubmit} className="space-y-4 mt-2">
         {/* Type Selector */}
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1.5">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1.5">
             Record Type
           </label>
-          <div className="grid grid-cols-2 gap-2 p-1 glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)]">
+          <div className="grid grid-cols-2 gap-2 p-1 glass-strong rounded-(--radius-control) border border-(--glass-border)">
             <button
               type="button"
               onClick={() => setType("debt")}
-              className={`py-1.5 px-3 text-xs font-medium rounded-[var(--radius-control)] transition-all ${
+              className={`py-1.5 px-3 text-xs font-medium rounded-(--radius-control) transition-all ${
                 type === "debt"
-                  ? "bg-[var(--negative)] text-white shadow-sm"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-(--negative) text-white shadow-sm"
+                  : "text-(--text-muted) hover:text-(--text)"
               }`}
             >
               Debt (I Owe)
@@ -94,10 +94,10 @@ export function DebtFormDialog({
             <button
               type="button"
               onClick={() => setType("receivable")}
-              className={`py-1.5 px-3 text-xs font-medium rounded-[var(--radius-control)] transition-all ${
+              className={`py-1.5 px-3 text-xs font-medium rounded-(--radius-control) transition-all ${
                 type === "receivable"
-                  ? "bg-[var(--positive)] text-white shadow-sm"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-(--positive) text-white shadow-sm"
+                  : "text-(--text-muted) hover:text-(--text)"
               }`}
             >
               Receivable (Owed to Me)
@@ -142,12 +142,12 @@ export function DebtFormDialog({
 
         {/* Note */}
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Note (Optional)
           </label>
           <input
             type="text"
-            className="w-full glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] px-3 py-2 text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+            className="w-full glass-strong rounded-(--radius-control) border border-(--glass-border) px-3 py-2 text-sm text-(--text) placeholder-(--text-muted) focus:outline-none focus:ring-2 focus:ring-(--accent)"
             placeholder="e.g. Home renovation loan"
             value={note}
             onChange={(e) => setNote(e.target.value)}
@@ -156,7 +156,7 @@ export function DebtFormDialog({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 pt-2 border-t border-[var(--glass-border)]">
+        <div className="flex items-center justify-end gap-3 pt-2 border-t border-(--glass-border)">
           <Button
             type="button"
             variant="secondary"

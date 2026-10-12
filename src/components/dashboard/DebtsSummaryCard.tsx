@@ -34,14 +34,14 @@ export function DebtsSummaryCard({
     <div className="glass p-5">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Scale className="w-4 h-4 text-[var(--accent)]" />
-          <h2 className="text-sm font-semibold text-[var(--text)]">
+          <Scale className="w-4 h-4 text-(--accent)" />
+          <h2 className="text-sm font-semibold text-(--text)">
             Debts & Receivables
           </h2>
         </div>
         <Link
           href="/debts"
-          className="inline-flex items-center gap-1 text-xs font-medium text-[var(--accent)] hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-medium text-(--accent) hover:underline"
         >
           View details
           <ArrowRight className="w-3.5 h-3.5" />
@@ -49,11 +49,11 @@ export function DebtsSummaryCard({
       </div>
 
       {!hasActivity ? (
-        <div className="py-4 text-xs text-[var(--text-muted)] flex items-center justify-between">
+        <div className="py-4 text-xs text-(--text-muted) flex items-center justify-between">
           <span>No active debts or receivables.</span>
           <Link
             href="/debts"
-            className="text-xs font-medium text-[var(--accent)] hover:underline"
+            className="text-xs font-medium text-(--accent) hover:underline"
           >
             Record new &rarr;
           </Link>
@@ -62,27 +62,27 @@ export function DebtsSummaryCard({
         <div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Utang */}
-            <div className="p-3 glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)]">
-              <span className="block text-xs font-medium text-[var(--text-muted)]">
+            <div className="p-3 glass-strong rounded-(--radius-control) border border-(--glass-border)">
+              <span className="block text-xs font-medium text-(--text-muted)">
                 Debts (Liabilities)
               </span>
-              <div className="mt-1 text-xl font-bold text-[var(--negative)] num tracking-tight">
+              <div className="mt-1 text-xl font-bold text-(--negative) num tracking-tight">
                 {hideNumbers ? "Rp ••••••" : formatIDR(debtBig)}
               </div>
-              <span className="text-[11px] text-[var(--text-muted)] num block mt-0.5">
+              <span className="text-[11px] text-(--text-muted) num block mt-0.5">
                 {unpaidDebtCount} unpaid
               </span>
             </div>
 
             {/* Piutang */}
-            <div className="p-3 glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)]">
-              <span className="block text-xs font-medium text-[var(--text-muted)]">
+            <div className="p-3 glass-strong rounded-(--radius-control) border border-(--glass-border)">
+              <span className="block text-xs font-medium text-(--text-muted)">
                 Receivables (Assets)
               </span>
-              <div className="mt-1 text-xl font-bold text-[var(--positive)] num tracking-tight">
+              <div className="mt-1 text-xl font-bold text-(--positive) num tracking-tight">
                 {hideNumbers ? "Rp ••••••" : formatIDR(receivableBig)}
               </div>
-              <span className="text-[11px] text-[var(--text-muted)] num block mt-0.5">
+              <span className="text-[11px] text-(--text-muted) num block mt-0.5">
                 {unpaidReceivableCount} unpaid
               </span>
             </div>
@@ -90,7 +90,7 @@ export function DebtsSummaryCard({
 
           {/* Overdue alert if any */}
           {overdueCount > 0 && (
-            <div className="flex items-center gap-1.5 text-xs text-[var(--chart-4)] font-medium mt-3 pt-2 border-t border-[var(--glass-border)]">
+            <div className="flex items-center gap-1.5 text-xs text-(--chart-4) font-medium mt-3 pt-2 border-t border-(--glass-border)">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{overdueCount} records past due</span>
             </div>

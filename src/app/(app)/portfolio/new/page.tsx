@@ -13,10 +13,10 @@ export default async function NewHoldingPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="enter" style={{ "--i": 0 } as React.CSSProperties}>
-        <h1 className="text-2xl font-bold text-[var(--text)] tracking-tight">
+        <h1 className="text-2xl font-bold text-(--text) tracking-tight">
           Add position
         </h1>
-        <p className="text-xs text-[var(--text-muted)] mt-0.5">
+        <p className="text-xs text-(--text-muted) mt-0.5">
           Record a new asset holding in your portfolio
         </p>
       </div>

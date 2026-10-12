@@ -8,10 +8,10 @@ export default function DebtsLoading() {
         <Skeleton className="h-9 w-32" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Skeleton className="h-24 rounded-[var(--radius-panel)]" />
-        <Skeleton className="h-24 rounded-[var(--radius-panel)]" />
+        <Skeleton className="h-24 rounded-(--radius-panel)" />
+        <Skeleton className="h-24 rounded-(--radius-panel)" />
       </div>
-      <Skeleton className="h-64 rounded-[var(--radius-panel)]" />
+      <Skeleton className="h-64 rounded-(--radius-panel)" />
     </div>
   );
 }

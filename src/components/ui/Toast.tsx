@@ -46,21 +46,21 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.22, ease: [0.2, 0, 0, 1] }}
-              className="pointer-events-auto glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] p-3 sm:p-3.5 shadow-lg flex items-center justify-between gap-3 text-sm text-[var(--text)]"
+              className="pointer-events-auto glass-strong rounded-(--radius-control) border border-(--glass-border) p-3 sm:p-3.5 shadow-lg flex items-center justify-between gap-3 text-sm text-(--text)"
             >
               <div className="flex items-center gap-2 min-w-0">
                 {t.type === "success" && (
                   <CheckCircle2
                     size={18}
                     strokeWidth={1.75}
-                    className="text-[var(--positive)] shrink-0"
+                    className="text-(--positive) shrink-0"
                   />
                 )}
                 {t.type === "error" && (
                   <AlertCircle
                     size={18}
                     strokeWidth={1.75}
-                    className="text-[var(--negative)] shrink-0"
+                    className="text-(--negative) shrink-0"
                   />
                 )}
                 <span>{t.message}</span>
@@ -69,7 +69,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 type="button"
                 onClick={() => removeToast(t.id)}
                 aria-label="Dismiss toast"
-                className="text-[var(--text-muted)] hover:text-[var(--text)] p-0.5 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none"
+                className="text-(--text-muted) hover:text-(--text) p-0.5 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none"
               >
                 <X size={16} strokeWidth={1.75} />
               </button>

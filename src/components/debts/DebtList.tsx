@@ -77,7 +77,7 @@ export function DebtList({
   if (debts.length === 0) {
     return (
       <div className="glass p-8 text-center flex flex-col items-center justify-center space-y-3">
-        <p className="text-sm text-[var(--text-muted)]">
+        <p className="text-sm text-(--text-muted)">
           No debts or receivables recorded yet.
         </p>
         {onOpenCreate && (
@@ -103,7 +103,7 @@ export function DebtList({
           return (
             <div
               key={d.id}
-              className="glass p-4 sm:p-5 flex flex-col gap-3 transition-all duration-[var(--dur-fast)]"
+              className="glass p-4 sm:p-5 flex flex-col gap-3 transition-all duration-(--dur-fast)"
             >
               {/* Header row: Badge, Person Name, Status, Overdue */}
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -112,14 +112,14 @@ export function DebtList({
                   <span
                     className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                       isDebt
-                        ? "bg-[var(--negative)]/15 text-[var(--negative)]"
-                        : "bg-[var(--positive)]/15 text-[var(--positive)]"
+                        ? "bg-(--negative)/15 text-(--negative)"
+                        : "bg-(--positive)/15 text-(--positive)"
                     }`}
                   >
                     {isDebt ? "Debt" : "Receivable"}
                   </span>
 
-                  <span className="font-bold text-base text-[var(--text)] tracking-tight">
+                  <span className="font-bold text-base text-(--text) tracking-tight">
                     {d.person_name}
                   </span>
 
@@ -127,10 +127,10 @@ export function DebtList({
                   <span
                     className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
                       d.status === "settled"
-                        ? "bg-[var(--positive)]/15 text-[var(--positive)]"
+                        ? "bg-(--positive)/15 text-(--positive)"
                         : d.status === "partially_paid"
-                          ? "bg-[var(--accent)]/15 text-[var(--accent)]"
-                          : "bg-black/5 dark:bg-white/10 text-[var(--text-muted)]"
+                          ? "bg-(--accent)/15 text-(--accent)"
+                          : "bg-black/5 dark:bg-white/10 text-(--text-muted)"
                     }`}
                   >
                     {d.status === "settled"
@@ -142,7 +142,7 @@ export function DebtList({
 
                   {/* Overdue alert badge */}
                   {d.is_overdue && (
-                    <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-[var(--chart-4)]/15 text-[var(--chart-4)] font-semibold">
+                    <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-(--chart-4)/15 text-(--chart-4) font-semibold">
                       <AlertCircle className="w-3 h-3" />
                       Overdue
                     </span>
@@ -175,7 +175,7 @@ export function DebtList({
                   <button
                     type="button"
                     onClick={() => setDeletingId(d.id)}
-                    className="p-1.5 rounded-[var(--radius-control)] text-[var(--text-muted)] hover:text-[var(--negative)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    className="p-1.5 rounded-(--radius-control) text-(--text-muted) hover:text-(--negative) hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                     aria-label={`Delete record for ${d.person_name}`}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -184,19 +184,19 @@ export function DebtList({
               </div>
 
               {/* Amount and Progress Bar */}
-              <div className="pt-2 border-t border-[var(--glass-border)]">
+              <div className="pt-2 border-t border-(--glass-border)">
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-2">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-xs text-[var(--text-muted)]">Remaining:</span>
-                    <span className="text-lg font-bold text-[var(--text)] num">
+                    <span className="text-xs text-(--text-muted)">Remaining:</span>
+                    <span className="text-lg font-bold text-(--text) num">
                       {hideNumbers ? "Rp ••••••" : formatIDR(BigInt(d.remaining_amount))}
                     </span>
-                    <span className="text-xs text-[var(--text-muted)] num">
+                    <span className="text-xs text-(--text-muted) num">
                       of total {hideNumbers ? "Rp ••••••" : formatIDR(BigInt(d.amount))}
                     </span>
                   </div>
 
-                  <div className="text-xs text-[var(--text-muted)] num">
+                  <div className="text-xs text-(--text-muted) num">
                     Paid: {percentPaid}% (
                     {hideNumbers ? "••••••" : formatIDR(BigInt(d.paid_amount))})
                   </div>
@@ -205,12 +205,12 @@ export function DebtList({
                 {/* Progress bar track */}
                 <div className="h-1.5 w-full bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all duration-[var(--dur-base)] ${
+                    className={`h-full rounded-full transition-all duration-(--dur-base) ${
                       d.status === "settled"
-                        ? "bg-[var(--positive)]"
+                        ? "bg-(--positive)"
                         : isDebt
-                          ? "bg-[var(--negative)]"
-                          : "bg-[var(--positive)]"
+                          ? "bg-(--negative)"
+                          : "bg-(--positive)"
                     }`}
                     style={{ width: `${percentPaid}%` }}
                   />
@@ -218,7 +218,7 @@ export function DebtList({
               </div>
 
               {/* Footer info: Date, Due Date, Note */}
-              <div className="flex flex-wrap items-center justify-between text-xs text-[var(--text-muted)] pt-1">
+              <div className="flex flex-wrap items-center justify-between text-xs text-(--text-muted) pt-1">
                 <div className="flex items-center gap-4 flex-wrap">
                   <span className="inline-flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5" />
@@ -228,7 +228,7 @@ export function DebtList({
                     <span
                       className={`inline-flex items-center gap-1 ${
                         d.is_overdue
-                          ? "text-[var(--chart-4)] font-semibold"
+                          ? "text-(--chart-4) font-semibold"
                           : ""
                       }`}
                     >

@@ -202,13 +202,13 @@ export function TransactionForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="glass p-6 rounded-[var(--radius-panel)] border border-[var(--glass-border)] max-w-lg mx-auto space-y-5"
+      className="glass p-6 rounded-(--radius-panel) border border-(--glass-border) max-w-lg mx-auto space-y-5"
     >
-      <div className="border-b border-[var(--glass-border)] pb-3">
-        <h2 className="text-xl font-semibold text-[var(--text)]">
+      <div className="border-b border-(--glass-border) pb-3">
+        <h2 className="text-xl font-semibold text-(--text)">
           {isEditing ? "Edit transaction" : "Add transaction"}
         </h2>
-        <p className="text-xs text-[var(--text-muted)] mt-1">
+        <p className="text-xs text-(--text-muted) mt-1">
           Target: fast entry in under 10 seconds
         </p>
       </div>
@@ -226,7 +226,7 @@ export function TransactionForm({
       <div>
         <label
           htmlFor="amount"
-          className="block text-xs font-medium text-[var(--text-muted)] mb-1"
+          className="block text-xs font-medium text-(--text-muted) mb-1"
         >
           Amount (IDR)
         </label>
@@ -240,10 +240,10 @@ export function TransactionForm({
           value={displayAmount}
           onChange={handleAmountChange}
           placeholder="Rp 0"
-          className="w-full glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] px-4 py-3 text-2xl font-bold num text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+          className="w-full glass-strong rounded-(--radius-control) border border-(--glass-border) px-4 py-3 text-2xl font-bold num text-(--text) placeholder-(--text-muted) focus:outline-none focus:ring-2 focus:ring-(--accent)"
         />
         {numericAmount > 0 && (
-          <p className="text-xs text-[var(--text-muted)] mt-1 num">
+          <p className="text-xs text-(--text-muted) mt-1 num">
             = {formatIDR(numericAmount)}
           </p>
         )}
@@ -251,7 +251,7 @@ export function TransactionForm({
 
       {/* 2. Income / Expense Toggle */}
       <div>
-        <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+        <label className="block text-xs font-medium text-(--text-muted) mb-1">
           Type
         </label>
         <SegmentedToggle
@@ -286,7 +286,7 @@ export function TransactionForm({
       <div>
         <label
           htmlFor="date"
-          className="block text-xs font-medium text-[var(--text-muted)] mb-1"
+          className="block text-xs font-medium text-(--text-muted) mb-1"
         >
           Date
         </label>
@@ -297,7 +297,7 @@ export function TransactionForm({
           required
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="w-full glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] px-3 py-2 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+          className="w-full glass-strong rounded-(--radius-control) border border-(--glass-border) px-3 py-2 text-sm text-(--text) focus:outline-none focus:ring-2 focus:ring-(--accent)"
         />
       </div>
 
@@ -311,7 +311,7 @@ export function TransactionForm({
       />
 
       {/* Action buttons */}
-      <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--glass-border)]">
+      <div className="flex items-center justify-end gap-3 pt-3 border-t border-(--glass-border)">
         <Button
           type="button"
           variant="ghost"

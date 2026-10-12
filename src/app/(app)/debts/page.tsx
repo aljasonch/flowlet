@@ -37,10 +37,10 @@ export default async function DebtsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--text)] tracking-tight">
+          <h1 className="text-2xl font-semibold text-(--text) tracking-tight">
             Debts & Receivables
           </h1>
-          <p className="text-xs text-[var(--text-muted)] mt-0.5">
+          <p className="text-xs text-(--text-muted) mt-0.5">
             Track unpaid liabilities and receivables outside of cash flow
           </p>
         </div>

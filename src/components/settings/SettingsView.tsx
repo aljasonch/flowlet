@@ -210,8 +210,8 @@ export function SettingsView({
   return (
     <div className="space-y-8 max-w-4xl">
       <div className="enter" style={{ "--i": 0 } as React.CSSProperties}>
-        <h1 className="text-2xl font-semibold text-[var(--text)]">Settings</h1>
-        <p className="text-sm text-[var(--text-muted)] mt-1">
+        <h1 className="text-2xl font-semibold text-(--text)">Settings</h1>
+        <p className="text-sm text-(--text-muted) mt-1">
           Configure cash flow rules, reporting preferences, and categories
         </p>
       </div>
@@ -221,7 +221,7 @@ export function SettingsView({
         className="enter glass p-6 space-y-6"
         style={{ "--i": 1 } as React.CSSProperties}
       >
-        <h2 className="text-base font-semibold text-[var(--text)] border-b border-[var(--glass-border)] pb-2">
+        <h2 className="text-base font-semibold text-(--text) border-b border-(--glass-border) pb-2">
           Reporting preferences
         </h2>
 
@@ -237,7 +237,7 @@ export function SettingsView({
               required
             />
           </div>
-          <p className="text-xs text-[var(--text-muted)]">
+          <p className="text-xs text-(--text-muted)">
             Cash-flow reports compute based on this day. Past transactions will not be modified.
           </p>
           <Button type="submit" size="sm" disabled={isUpdatingDay}>
@@ -245,21 +245,21 @@ export function SettingsView({
           </Button>
         </form>
 
-        <div className="pt-2 border-t border-[var(--glass-border)]">
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+        <div className="pt-2 border-t border-(--glass-border)">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Reporting currency
           </label>
-          <div className="glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] px-3 py-2 text-sm text-[var(--text)] max-w-xs">
+          <div className="glass-strong rounded-(--radius-control) border border-(--glass-border) px-3 py-2 text-sm text-(--text) max-w-xs">
             Indonesian Rupiah (IDR)
           </div>
-          <p className="text-xs text-[var(--text-muted)] mt-1">
+          <p className="text-xs text-(--text-muted) mt-1">
             Cash-flow reporting currency is fixed to IDR.
           </p>
         </div>
 
         <form
           onSubmit={handleSaveRate}
-          className="pt-2 border-t border-[var(--glass-border)] space-y-3"
+          className="pt-2 border-t border-(--glass-border) space-y-3"
         >
           <div className="max-w-xs">
             <Input
@@ -272,7 +272,7 @@ export function SettingsView({
             />
           </div>
           {rateUpdatedAt && (
-            <p className="text-xs text-[var(--text-muted)]">
+            <p className="text-xs text-(--text-muted)">
               Last updated: {new Date(rateUpdatedAt).toLocaleString("id-ID")}
             </p>
           )}
@@ -308,7 +308,7 @@ export function SettingsView({
         className="enter glass p-6 space-y-4"
         style={{ "--i": 2 } as React.CSSProperties}
       >
-        <h2 className="text-base font-semibold text-[var(--text)] border-b border-[var(--glass-border)] pb-2">
+        <h2 className="text-base font-semibold text-(--text) border-b border-(--glass-border) pb-2">
           Expense categories
         </h2>
 
@@ -325,10 +325,10 @@ export function SettingsView({
         </form>
 
         <div className="mt-4 space-y-2">
-          <h3 className="text-xs font-semibold text-[var(--text-muted)]">
+          <h3 className="text-xs font-semibold text-(--text-muted)">
             Active categories
           </h3>
-          <div className="divide-y divide-[var(--glass-border)] glass-strong rounded-[var(--radius-panel)] border border-[var(--glass-border)] overflow-hidden">
+          <div className="divide-y divide-(--glass-border) glass-strong rounded-(--radius-panel) border border-(--glass-border) overflow-hidden">
             {activeCategories.map((cat) => (
               <div
                 key={cat.id}
@@ -354,7 +354,7 @@ export function SettingsView({
                   </div>
                 ) : (
                   <>
-                    <span className="font-medium text-[var(--text)]">{cat.name}</span>
+                    <span className="font-medium text-(--text)">{cat.name}</span>
                     <div className="flex items-center gap-1">
                       <Button
                         size="sm"
@@ -385,16 +385,16 @@ export function SettingsView({
 
         {archivedCategories.length > 0 && (
           <div className="mt-4 space-y-2">
-            <h3 className="text-xs font-semibold text-[var(--text-muted)]">
+            <h3 className="text-xs font-semibold text-(--text-muted)">
               Archived categories
             </h3>
-            <div className="divide-y divide-[var(--glass-border)] glass-strong rounded-[var(--radius-panel)] border border-[var(--glass-border)] opacity-70">
+            <div className="divide-y divide-(--glass-border) glass-strong rounded-(--radius-panel) border border-(--glass-border) opacity-70">
               {archivedCategories.map((cat) => (
                 <div
                   key={cat.id}
                   className="p-3 flex items-center justify-between text-sm"
                 >
-                  <span className="text-[var(--text-muted)]">{cat.name}</span>
+                  <span className="text-(--text-muted)">{cat.name}</span>
                   <Button
                     size="sm"
                     variant="ghost"
@@ -415,7 +415,7 @@ export function SettingsView({
         className="enter glass p-6 space-y-4"
         style={{ "--i": 3 } as React.CSSProperties}
       >
-        <h2 className="text-base font-semibold text-[var(--text)] border-b border-[var(--glass-border)] pb-2">
+        <h2 className="text-base font-semibold text-(--text) border-b border-(--glass-border) pb-2">
           Income sources
         </h2>
 
@@ -432,10 +432,10 @@ export function SettingsView({
         </form>
 
         <div className="mt-4 space-y-2">
-          <h3 className="text-xs font-semibold text-[var(--text-muted)]">
+          <h3 className="text-xs font-semibold text-(--text-muted)">
             Active sources
           </h3>
-          <div className="divide-y divide-[var(--glass-border)] glass-strong rounded-[var(--radius-panel)] border border-[var(--glass-border)] overflow-hidden">
+          <div className="divide-y divide-(--glass-border) glass-strong rounded-(--radius-panel) border border-(--glass-border) overflow-hidden">
             {activeSources.map((source) => (
               <div
                 key={source.id}
@@ -461,7 +461,7 @@ export function SettingsView({
                   </div>
                 ) : (
                   <>
-                    <span className="font-medium text-[var(--text)]">
+                    <span className="font-medium text-(--text)">
                       {source.name}
                     </span>
                     <div className="flex items-center gap-1">
@@ -496,16 +496,16 @@ export function SettingsView({
 
         {archivedSources.length > 0 && (
           <div className="mt-4 space-y-2">
-            <h3 className="text-xs font-semibold text-[var(--text-muted)]">
+            <h3 className="text-xs font-semibold text-(--text-muted)">
               Archived sources
             </h3>
-            <div className="divide-y divide-[var(--glass-border)] glass-strong rounded-[var(--radius-panel)] border border-[var(--glass-border)] opacity-70">
+            <div className="divide-y divide-(--glass-border) glass-strong rounded-(--radius-panel) border border-(--glass-border) opacity-70">
               {archivedSources.map((source) => (
                 <div
                   key={source.id}
                   className="p-3 flex items-center justify-between text-sm"
                 >
-                  <span className="text-[var(--text-muted)]">{source.name}</span>
+                  <span className="text-(--text-muted)">{source.name}</span>
                   <Button
                     size="sm"
                     variant="ghost"

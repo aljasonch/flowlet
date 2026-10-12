@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 export function EmptyDashboard() {
   return (
     <div className="glass p-8 text-center flex flex-col items-center justify-center space-y-4">
-      <p className="text-sm text-[var(--text-muted)] max-w-sm">
+      <p className="text-sm text-(--text-muted) max-w-sm">
         No transactions recorded for this period.
       </p>
       <Link href="/transactions/new">

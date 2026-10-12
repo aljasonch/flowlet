@@ -73,10 +73,10 @@ export function PortfolioView({
         style={{ "--i": 0 } as React.CSSProperties}
       >
         <div>
-          <h1 className="text-2xl font-bold text-[var(--text)] tracking-tight">
+          <h1 className="text-2xl font-bold text-(--text) tracking-tight">
             Portfolio
           </h1>
-          <p className="text-xs text-[var(--text-muted)] mt-0.5">
+          <p className="text-xs text-(--text-muted) mt-0.5">
             Holdings, valuation and unrealized gain or loss
           </p>
         </div>
@@ -92,9 +92,9 @@ export function PortfolioView({
             title={hideNumbers ? "Show balances" : "Hide balances"}
           >
             {hideNumbers ? (
-              <EyeOff className="w-4 h-4 text-[var(--text-muted)]" />
+              <EyeOff className="w-4 h-4 text-(--text-muted)" />
             ) : (
-              <Eye className="w-4 h-4 text-[var(--text-muted)]" />
+              <Eye className="w-4 h-4 text-(--text-muted)" />
             )}
           </Button>
 
@@ -117,21 +117,21 @@ export function PortfolioView({
       {/* USD Rate Missing Banner */}
       {showUsdMissingRateBanner && (
         <div
-          className="enter glass p-4 border border-[var(--chart-4)]/40 flex items-start gap-3"
+          className="enter glass p-4 border border-(--chart-4)/40 flex items-start gap-3"
           style={{ "--i": 1 } as React.CSSProperties}
         >
-          <AlertTriangle className="w-5 h-5 text-[var(--chart-4)] shrink-0 mt-0.5" />
+          <AlertTriangle className="w-5 h-5 text-(--chart-4) shrink-0 mt-0.5" />
           <div className="flex-1 text-xs">
-            <p className="font-semibold text-[var(--text)]">
+            <p className="font-semibold text-(--text)">
               USD to IDR exchange rate required
             </p>
-            <p className="text-[var(--text-muted)] mt-0.5">
+            <p className="text-(--text-muted) mt-0.5">
               You have positions priced in USD, but no exchange rate is configured.
               IDR totals exclude these positions until a rate is set in Settings.
             </p>
             <Link
               href="/settings"
-              className="inline-flex items-center gap-1 font-medium text-[var(--accent)] hover:underline mt-1.5"
+              className="inline-flex items-center gap-1 font-medium text-(--accent) hover:underline mt-1.5"
             >
               Set exchange rate in Settings
               <ArrowRight className="w-3.5 h-3.5" />
@@ -148,25 +148,25 @@ export function PortfolioView({
       >
         <div className="flex items-center justify-between">
           <div>
-            <span className="block text-[11px] font-medium text-[var(--text-muted)]">
+            <span className="block text-[11px] font-medium text-(--text-muted)">
               Total portfolio value
             </span>
-            <div className="mt-0.5 text-2xl font-bold text-[var(--text)] num tracking-tight">
+            <div className="mt-0.5 text-2xl font-bold text-(--text) num tracking-tight">
               {hideNumbers ? "Rp ••••••" : formatIDR(totalValueBig)}
             </div>
-            <div className="text-[11px] text-[var(--text-muted)] num mt-0.5">
+            <div className="text-[11px] text-(--text-muted) num mt-0.5">
               {summary.priced_count} priced position{summary.priced_count === 1 ? "" : "s"}
             </div>
           </div>
           <span
             className={`text-xs px-2.5 py-1 rounded-full font-semibold flex items-center gap-1 ${
               hideNumbers
-                ? "bg-black/5 dark:bg-white/10 text-[var(--text-muted)]"
+                ? "bg-black/5 dark:bg-white/10 text-(--text-muted)"
                 : isGain
-                  ? "bg-[var(--positive)]/15 text-[var(--positive)]"
+                  ? "bg-(--positive)/15 text-(--positive)"
                   : isLoss
-                    ? "bg-[var(--negative)]/15 text-[var(--negative)]"
-                    : "bg-black/5 dark:bg-white/10 text-[var(--text-muted)]"
+                    ? "bg-(--negative)/15 text-(--negative)"
+                    : "bg-black/5 dark:bg-white/10 text-(--text-muted)"
             }`}
           >
             {hideNumbers ? (
@@ -184,28 +184,28 @@ export function PortfolioView({
         </div>
 
         {/* Sub-row: Invested Cost & Unrealized P&L split */}
-        <div className="grid grid-cols-2 gap-3 pt-2.5 border-t border-[var(--glass-border)]">
+        <div className="grid grid-cols-2 gap-3 pt-2.5 border-t border-(--glass-border)">
           <div>
-            <span className="block text-[10px] font-medium text-[var(--text-muted)]">
+            <span className="block text-[10px] font-medium text-(--text-muted)">
               Invested cost
             </span>
-            <span className="text-sm font-semibold text-[var(--text)] num block mt-0.5">
+            <span className="text-sm font-semibold text-(--text) num block mt-0.5">
               {hideNumbers ? "Rp ••••••" : formatIDR(totalCostBig)}
             </span>
           </div>
           <div>
-            <span className="block text-[10px] font-medium text-[var(--text-muted)]">
+            <span className="block text-[10px] font-medium text-(--text-muted)">
               Unrealized gain / loss
             </span>
             <span
               className={`text-sm font-semibold num block mt-0.5 ${
                 hideNumbers
-                  ? "text-[var(--text)]"
+                  ? "text-(--text)"
                   : isGain
-                    ? "text-[var(--positive)]"
+                    ? "text-(--positive)"
                     : isLoss
-                      ? "text-[var(--negative)]"
-                      : "text-[var(--text)]"
+                      ? "text-(--negative)"
+                      : "text-(--text)"
               }`}
             >
               {hideNumbers
@@ -224,42 +224,42 @@ export function PortfolioView({
         style={{ "--i": 1 } as React.CSSProperties}
       >
         <div className="glass p-5">
-          <span className="block text-xs font-medium text-[var(--text-muted)]">
+          <span className="block text-xs font-medium text-(--text-muted)">
             Total portfolio value
           </span>
-          <div className="mt-2 text-2xl font-semibold text-[var(--text)] num tracking-tight">
+          <div className="mt-2 text-2xl font-semibold text-(--text) num tracking-tight">
             {hideNumbers ? "Rp ••••••" : formatIDR(totalValueBig)}
           </div>
-          <div className="text-[11px] text-[var(--text-muted)] num mt-1">
+          <div className="text-[11px] text-(--text-muted) num mt-1">
             {summary.priced_count} priced position{summary.priced_count === 1 ? "" : "s"}
           </div>
         </div>
 
         <div className="glass p-5">
-          <span className="block text-xs font-medium text-[var(--text-muted)]">
+          <span className="block text-xs font-medium text-(--text-muted)">
             Total invested cost
           </span>
-          <div className="mt-2 text-2xl font-semibold text-[var(--text)] num tracking-tight">
+          <div className="mt-2 text-2xl font-semibold text-(--text) num tracking-tight">
             {hideNumbers ? "Rp ••••••" : formatIDR(totalCostBig)}
           </div>
-          <div className="text-[11px] text-[var(--text-muted)] num mt-1">
+          <div className="text-[11px] text-(--text-muted) num mt-1">
             Excludes unpriced positions
           </div>
         </div>
 
         <div className="glass p-5">
-          <span className="block text-xs font-medium text-[var(--text-muted)]">
+          <span className="block text-xs font-medium text-(--text-muted)">
             Unrealized gain / loss
           </span>
           <div
             className={`mt-2 text-2xl font-semibold num tracking-tight flex items-center gap-1 ${
               hideNumbers
-                ? "text-[var(--text)]"
+                ? "text-(--text)"
                 : isGain
-                  ? "text-[var(--positive)]"
+                  ? "text-(--positive)"
                   : isLoss
-                    ? "text-[var(--negative)]"
-                    : "text-[var(--text)]"
+                    ? "text-(--negative)"
+                    : "text-(--text)"
             }`}
           >
             {hideNumbers ? (
@@ -272,7 +272,7 @@ export function PortfolioView({
               </>
             )}
           </div>
-          <div className="text-[11px] text-[var(--text-muted)] num mt-1">
+          <div className="text-[11px] text-(--text-muted) num mt-1">
             {hideNumbers
               ? "••••••"
               : `${overallGainPct != null ? formatPercent(overallGainPct) : "0.00%"} overall return`}
@@ -283,7 +283,7 @@ export function PortfolioView({
       {/* Unpriced note if any */}
       {summary.unpriced_count > 0 && (
         <div
-          className="enter text-xs text-[var(--chart-4)] glass px-4 py-2"
+          className="enter text-xs text-(--chart-4) glass px-4 py-2"
           style={{ "--i": 2 } as React.CSSProperties}
         >
           {summary.unpriced_count} position{summary.unpriced_count === 1 ? "" : "s"} has no price and is excluded from valuation totals.
@@ -304,10 +304,10 @@ export function PortfolioView({
       {/* Holdings List */}
       <div className="enter space-y-3" style={{ "--i": 3 } as React.CSSProperties}>
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-[var(--text)]">
+          <h2 className="text-base font-semibold text-(--text)">
             Holdings
           </h2>
-          <span className="text-xs text-[var(--text-muted)] num">
+          <span className="text-xs text-(--text-muted) num">
             {holdings.length} position{holdings.length === 1 ? "" : "s"}
           </span>
         </div>
@@ -317,7 +317,7 @@ export function PortfolioView({
 
       {/* Disclaimer and Attribution */}
       <div
-        className="enter text-center text-[11px] text-[var(--text-muted)] pt-4 space-y-1"
+        className="enter text-center text-[11px] text-(--text-muted) pt-4 space-y-1"
         style={{ "--i": 4 } as React.CSSProperties}
       >
         <p>Prices may be delayed or inaccurate. This is not financial advice.</p>
@@ -328,7 +328,7 @@ export function PortfolioView({
               href="https://www.coingecko.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-[var(--text)] transition-colors"
+              className="underline hover:text-(--text) transition-colors"
             >
               CoinGecko
             </a>

@@ -13,6 +13,7 @@ import { SpendingChart } from "@/components/dashboard/SpendingChart";
 import { IncomeBreakdown } from "@/components/dashboard/IncomeBreakdown";
 import { TrendChart } from "@/components/dashboard/TrendChart";
 import { EmptyDashboard } from "@/components/dashboard/EmptyDashboard";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 export interface DashboardViewProps {
   year: number;
@@ -95,6 +96,7 @@ export function DashboardView({
   },
 }: DashboardViewProps) {
   const hideNumbers = usePrivacyMode();
+  const isSm = useMediaQuery("sm");
   const [mobileChartTab, setMobileChartTab] = React.useState<
     "spending" | "income" | "trend"
   >("spending");
@@ -117,10 +119,10 @@ export function DashboardView({
         style={{ "--i": 0 } as React.CSSProperties}
       >
         <div>
-          <h1 className="text-2xl font-bold text-[var(--text)] tracking-tight">
+          <h1 className="text-2xl font-bold text-(--text) tracking-tight">
             Dashboard
           </h1>
-          <p className="text-xs text-[var(--text-muted)] mt-0.5">
+          <p className="text-xs text-(--text-muted) mt-0.5">
             Cash flow and monthly summary
           </p>
         </div>
@@ -136,9 +138,9 @@ export function DashboardView({
             title={hideNumbers ? "Show balances" : "Hide balances"}
           >
             {hideNumbers ? (
-              <EyeOff className="w-4 h-4 text-[var(--text-muted)]" />
+              <EyeOff className="w-4 h-4 text-(--text-muted)" />
             ) : (
-              <Eye className="w-4 h-4 text-[var(--text-muted)]" />
+              <Eye className="w-4 h-4 text-(--text-muted)" />
             )}
           </Button>
 
@@ -214,15 +216,16 @@ export function DashboardView({
           <div
             className="sm:hidden enter space-y-3"
             style={{ "--i": 4 } as React.CSSProperties}
+            hidden={isSm}
           >
-            <div className="flex p-1 glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] text-xs">
+            <div className="flex p-1 glass-strong rounded-(--radius-control) border border-(--glass-border) text-xs">
               <button
                 type="button"
                 onClick={() => setMobileChartTab("spending")}
-                className={`flex-1 py-1.5 rounded-[var(--radius-control)] font-medium transition-all ${
+                className={`flex-1 py-1.5 rounded-(--radius-control) font-medium transition-all ${
                   mobileChartTab === "spending"
-                    ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm"
-                    : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                    ? "bg-(--accent) text-(--accent-contrast) shadow-sm"
+                    : "text-(--text-muted) hover:text-(--text)"
                 }`}
               >
                 Spending
@@ -230,10 +233,10 @@ export function DashboardView({
               <button
                 type="button"
                 onClick={() => setMobileChartTab("income")}
-                className={`flex-1 py-1.5 rounded-[var(--radius-control)] font-medium transition-all ${
+                className={`flex-1 py-1.5 rounded-(--radius-control) font-medium transition-all ${
                   mobileChartTab === "income"
-                    ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm"
-                    : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                    ? "bg-(--accent) text-(--accent-contrast) shadow-sm"
+                    : "text-(--text-muted) hover:text-(--text)"
                 }`}
               >
                 Income
@@ -241,19 +244,19 @@ export function DashboardView({
               <button
                 type="button"
                 onClick={() => setMobileChartTab("trend")}
-                className={`flex-1 py-1.5 rounded-[var(--radius-control)] font-medium transition-all ${
+                className={`flex-1 py-1.5 rounded-(--radius-control) font-medium transition-all ${
                   mobileChartTab === "trend"
-                    ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm"
-                    : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                    ? "bg-(--accent) text-(--accent-contrast) shadow-sm"
+                    : "text-(--text-muted) hover:text-(--text)"
                 }`}
               >
                 Trend
               </button>
             </div>
 
-            {mobileChartTab === "spending" && spendingSlot}
-            {mobileChartTab === "income" && incomeSlot}
-            {mobileChartTab === "trend" && trendSlot}
+            {!isSm && mobileChartTab === "spending" && spendingSlot}
+            {!isSm && mobileChartTab === "income" && incomeSlot}
+            {!isSm && mobileChartTab === "trend" && trendSlot}
           </div>
 
           {/* Desktop Full Grid (hidden sm:block) */}
@@ -262,12 +265,12 @@ export function DashboardView({
               className="enter grid grid-cols-1 lg:grid-cols-2 gap-6"
               style={{ "--i": 4 } as React.CSSProperties}
             >
-              {spendingSlot}
-              {incomeSlot}
+              {isSm && spendingSlot}
+              {isSm && incomeSlot}
             </div>
 
             <div className="enter" style={{ "--i": 5 } as React.CSSProperties}>
-              {trendSlot}
+              {isSm && trendSlot}
             </div>
           </div>
 
@@ -278,7 +281,7 @@ export function DashboardView({
           >
             <Link
               href={`/transactions?month=${formattedMonthStr}`}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--accent)] hover:underline focus:outline-none focus:ring-2 focus:ring-[var(--accent)] rounded p-1"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-(--accent) hover:underline focus:outline-none focus:ring-2 focus:ring-(--accent) rounded p-1"
             >
               View all transactions for this period
               <ArrowRight className="w-3.5 h-3.5" />
@@ -295,15 +298,16 @@ export function DashboardView({
           <div
             className="sm:hidden enter space-y-3"
             style={{ "--i": 4 } as React.CSSProperties}
+            hidden={isSm}
           >
-            <div className="flex p-1 glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] text-xs">
+            <div className="flex p-1 glass-strong rounded-(--radius-control) border border-(--glass-border) text-xs">
               <button
                 type="button"
                 onClick={() => setMobileChartTab("spending")}
-                className={`flex-1 py-1.5 rounded-[var(--radius-control)] font-medium transition-all ${
+                className={`flex-1 py-1.5 rounded-(--radius-control) font-medium transition-all ${
                   mobileChartTab === "spending"
-                    ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm"
-                    : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                    ? "bg-(--accent) text-(--accent-contrast) shadow-sm"
+                    : "text-(--text-muted) hover:text-(--text)"
                 }`}
               >
                 Spending
@@ -311,10 +315,10 @@ export function DashboardView({
               <button
                 type="button"
                 onClick={() => setMobileChartTab("income")}
-                className={`flex-1 py-1.5 rounded-[var(--radius-control)] font-medium transition-all ${
+                className={`flex-1 py-1.5 rounded-(--radius-control) font-medium transition-all ${
                   mobileChartTab === "income"
-                    ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm"
-                    : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                    ? "bg-(--accent) text-(--accent-contrast) shadow-sm"
+                    : "text-(--text-muted) hover:text-(--text)"
                 }`}
               >
                 Income
@@ -322,23 +326,23 @@ export function DashboardView({
               <button
                 type="button"
                 onClick={() => setMobileChartTab("trend")}
-                className={`flex-1 py-1.5 rounded-[var(--radius-control)] font-medium transition-all ${
+                className={`flex-1 py-1.5 rounded-(--radius-control) font-medium transition-all ${
                   mobileChartTab === "trend"
-                    ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm"
-                    : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                    ? "bg-(--accent) text-(--accent-contrast) shadow-sm"
+                    : "text-(--text-muted) hover:text-(--text)"
                 }`}
               >
                 Trend
               </button>
             </div>
 
-            {mobileChartTab === "spending" && (
+            {!isSm && mobileChartTab === "spending" && (
               <SpendingChart data={categories} hideNumbers={hideNumbers} />
             )}
-            {mobileChartTab === "income" && (
+            {!isSm && mobileChartTab === "income" && (
               <IncomeBreakdown data={sources} hideNumbers={hideNumbers} />
             )}
-            {mobileChartTab === "trend" && (
+            {!isSm && mobileChartTab === "trend" && (
               <TrendChart data={trend} hideNumbers={hideNumbers} />
             )}
           </div>
@@ -349,12 +353,16 @@ export function DashboardView({
               className="enter grid grid-cols-1 lg:grid-cols-2 gap-6"
               style={{ "--i": 4 } as React.CSSProperties}
             >
-              <SpendingChart data={categories} hideNumbers={hideNumbers} />
-              <IncomeBreakdown data={sources} hideNumbers={hideNumbers} />
+              {isSm && (
+                <SpendingChart data={categories} hideNumbers={hideNumbers} />
+              )}
+              {isSm && (
+                <IncomeBreakdown data={sources} hideNumbers={hideNumbers} />
+              )}
             </div>
 
             <div className="enter" style={{ "--i": 5 } as React.CSSProperties}>
-              <TrendChart data={trend} hideNumbers={hideNumbers} />
+              {isSm && <TrendChart data={trend} hideNumbers={hideNumbers} />}
             </div>
           </div>
 
@@ -365,7 +373,7 @@ export function DashboardView({
           >
             <Link
               href={`/transactions?month=${formattedMonthStr}`}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--accent)] hover:underline focus:outline-none focus:ring-2 focus:ring-[var(--accent)] rounded p-1"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-(--accent) hover:underline focus:outline-none focus:ring-2 focus:ring-(--accent) rounded p-1"
             >
               View all transactions for this period
               <ArrowRight className="w-3.5 h-3.5" />

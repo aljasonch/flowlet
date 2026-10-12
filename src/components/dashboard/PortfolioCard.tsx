@@ -43,14 +43,14 @@ export function PortfolioCard({
     <div className="glass p-5">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Briefcase className="w-4 h-4 text-[var(--accent)]" />
-          <h2 className="text-sm font-semibold text-[var(--text)]">
+          <Briefcase className="w-4 h-4 text-(--accent)" />
+          <h2 className="text-sm font-semibold text-(--text)">
             Portfolio
           </h2>
         </div>
         <Link
           href="/portfolio"
-          className="inline-flex items-center gap-1 text-xs font-medium text-[var(--accent)] hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-medium text-(--accent) hover:underline"
         >
           View portfolio
           <ArrowRight className="w-3.5 h-3.5" />
@@ -58,11 +58,11 @@ export function PortfolioCard({
       </div>
 
       {!hasHoldings ? (
-        <div className="py-4 text-xs text-[var(--text-muted)] flex items-center justify-between">
+        <div className="py-4 text-xs text-(--text-muted) flex items-center justify-between">
           <span>No portfolio positions recorded yet.</span>
           <Link
             href="/portfolio/new"
-            className="text-xs font-medium text-[var(--accent)] hover:underline"
+            className="text-xs font-medium text-(--accent) hover:underline"
           >
             Add first position &rarr;
           </Link>
@@ -70,21 +70,21 @@ export function PortfolioCard({
       ) : (
         <div>
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-            <div className="text-2xl font-bold text-[var(--text)] num tracking-tight">
+            <div className="text-2xl font-bold text-(--text) num tracking-tight">
               {hideNumbers ? "Rp ••••••" : formatIDR(valueBig)}
             </div>
 
             <div className="text-xs num flex items-center gap-1">
               {hideNumbers ? (
-                <span className="text-[var(--text-muted)] font-medium">••••••</span>
+                <span className="text-(--text-muted) font-medium">••••••</span>
               ) : (
                 <span
                   className={`inline-flex items-center font-medium ${
                     isGain
-                      ? "text-[var(--positive)]"
+                      ? "text-(--positive)"
                       : isLoss
-                        ? "text-[var(--negative)]"
-                        : "text-[var(--text-muted)]"
+                        ? "text-(--negative)"
+                        : "text-(--text-muted)"
                   }`}
                 >
                   {isGain && <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" />}
@@ -96,10 +96,10 @@ export function PortfolioCard({
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] num mt-2 pt-2 border-t border-[var(--glass-border)]">
+          <div className="flex items-center justify-between text-xs text-(--text-muted) num mt-2 pt-2 border-t border-(--glass-border)">
             <span>{pricedCount} priced position{pricedCount === 1 ? "" : "s"}</span>
             {unpricedCount > 0 && (
-              <span className="text-[var(--chart-4)]">
+              <span className="text-(--chart-4)">
                 {unpricedCount} unpriced position{unpricedCount === 1 ? "" : "s"}
               </span>
             )}

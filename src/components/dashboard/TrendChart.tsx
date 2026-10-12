@@ -63,10 +63,10 @@ export function TrendChart({ data, hideNumbers: hideProp }: TrendChartProps) {
     <div className="glass p-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <div>
-          <h3 className="text-base font-semibold text-[var(--text)]">
+          <h3 className="text-base font-semibold text-(--text)">
             6-month trend
           </h3>
-          <p className="text-xs text-[var(--text-muted)]">
+          <p className="text-xs text-(--text-muted)">
             Monthly income vs expenses
           </p>
         </div>
@@ -74,24 +74,24 @@ export function TrendChart({ data, hideNumbers: hideProp }: TrendChartProps) {
         {/* Legend */}
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-[var(--chart-1)]" />
-            <span className="text-[var(--text)]">Income</span>
+            <span className="w-2.5 h-2.5 rounded-xs bg-(--chart-1)" />
+            <span className="text-(--text)">Income</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-xs bg-[var(--chart-2)]" />
-            <span className="text-[var(--text)]">Expenses</span>
+            <span className="w-2.5 h-2.5 rounded-xs bg-(--chart-2)" />
+            <span className="text-(--text)">Expenses</span>
           </div>
         </div>
       </div>
 
       {!hasActivity ? (
-        <div className="py-16 text-center text-sm text-[var(--text-muted)]">
+        <div className="py-16 text-center text-sm text-(--text-muted)">
           No historical activity to display for the past 6 months.
         </div>
       ) : (
         <div className="h-60 w-full">
           {!mounted ? (
-            <div className="h-full w-full skeleton-pulse rounded-[var(--radius-control)] bg-black/5 dark:bg-white/5" />
+            <div className="h-full w-full skeleton-pulse rounded-(--radius-control) bg-black/5 dark:bg-white/5" />
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
@@ -126,33 +126,33 @@ export function TrendChart({ data, hideNumbers: hideProp }: TrendChartProps) {
                       const net = inc - exp;
 
                       return (
-                        <div className="glass-strong p-3 text-xs border border-[var(--glass-border)] rounded-[var(--radius-control)] shadow-md space-y-1.5">
-                          <p className="font-semibold text-[var(--text)] border-b border-[var(--glass-border)] pb-1">
+                        <div className="glass-strong p-3 text-xs border border-(--glass-border) rounded-(--radius-control) shadow-md space-y-1.5">
+                          <p className="font-semibold text-(--text) border-b border-(--glass-border) pb-1">
                             {label}
                           </p>
                           <div className="flex items-center justify-between gap-4">
-                            <span className="text-[var(--text-muted)]">Income:</span>
-                            <span className="font-medium text-[var(--text)] num">
+                            <span className="text-(--text-muted)">Income:</span>
+                            <span className="font-medium text-(--text) num">
                               {hideNumbers ? "Rp ••••••" : formatIDR(BigInt(inc))}
                             </span>
                           </div>
                           <div className="flex items-center justify-between gap-4">
-                            <span className="text-[var(--text-muted)]">Expenses:</span>
-                            <span className="font-medium text-[var(--text)] num">
+                            <span className="text-(--text-muted)">Expenses:</span>
+                            <span className="font-medium text-(--text) num">
                               {hideNumbers ? "Rp ••••••" : formatIDR(BigInt(exp))}
                             </span>
                           </div>
-                          <div className="flex items-center justify-between gap-4 pt-1 border-t border-[var(--glass-border)]">
-                            <span className="text-[var(--text-muted)]">Net:</span>
+                          <div className="flex items-center justify-between gap-4 pt-1 border-t border-(--glass-border)">
+                            <span className="text-(--text-muted)">Net:</span>
                             <span
                               className={`font-semibold num ${
                                 hideNumbers
-                                  ? "text-[var(--text)]"
+                                  ? "text-(--text)"
                                   : net > 0
-                                    ? "text-[var(--positive)]"
+                                    ? "text-(--positive)"
                                     : net < 0
-                                      ? "text-[var(--negative)]"
-                                      : "text-[var(--text)]"
+                                      ? "text-(--negative)"
+                                      : "text-(--text)"
                               }`}
                             >
                               {hideNumbers

@@ -7,12 +7,12 @@ export default function TransactionsLoading() {
         <Skeleton className="h-8 w-40" />
         <Skeleton className="h-9 w-32" />
       </div>
-      <Skeleton className="h-24 rounded-[var(--radius-panel)]" />
+      <Skeleton className="h-24 rounded-(--radius-panel)" />
       <div className="space-y-2">
-        <Skeleton className="h-16 rounded-[var(--radius-panel)]" />
-        <Skeleton className="h-16 rounded-[var(--radius-panel)]" />
-        <Skeleton className="h-16 rounded-[var(--radius-panel)]" />
-        <Skeleton className="h-16 rounded-[var(--radius-panel)]" />
+        <Skeleton className="h-16 rounded-(--radius-panel)" />
+        <Skeleton className="h-16 rounded-(--radius-panel)" />
+        <Skeleton className="h-16 rounded-(--radius-panel)" />
+        <Skeleton className="h-16 rounded-(--radius-panel)" />
       </div>
     </div>
   );

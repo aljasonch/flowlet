@@ -2,9 +2,6 @@
 
 :root {
   --bg: #E9EDF1;
-  --shape-a: #BFCBD8;
-  --shape-b: #D9D0C3;
-  --shape-c: #C6D5CB;
 
   --glass: rgba(255, 255, 255, 0.48);
   --glass-strong: rgba(255, 255, 255, 0.72);
@@ -37,9 +34,6 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0E1216;
-    --shape-a: #1E2C3B;
-    --shape-b: #2E2A25;
-    --shape-c: #1F3029;
 
     --glass: rgba(22, 28, 36, 0.50);
     --glass-strong: rgba(26, 34, 44, 0.72);

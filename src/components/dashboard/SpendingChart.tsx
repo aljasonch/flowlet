@@ -35,10 +35,10 @@ export function SpendingChart({ data, hideNumbers: hideProp }: SpendingChartProp
   if (data.length === 0 || totalExpense === 0) {
     return (
       <div className="glass p-5">
-        <h3 className="text-base font-semibold text-[var(--text)]">
+        <h3 className="text-base font-semibold text-(--text)">
           Spending by category
         </h3>
-        <div className="py-12 text-center text-sm text-[var(--text-muted)]">
+        <div className="py-12 text-center text-sm text-(--text-muted)">
           No expenses recorded in this period.
         </div>
       </div>
@@ -54,10 +54,10 @@ export function SpendingChart({ data, hideNumbers: hideProp }: SpendingChartProp
     <div className="glass p-5 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-[var(--text)]">
+          <h3 className="text-base font-semibold text-(--text)">
             Spending by category
           </h3>
-          <span className="text-xs text-[var(--text-muted)] num">
+          <span className="text-xs text-(--text-muted) num">
             {chartData.length} {chartData.length === 1 ? "category" : "categories"}
           </span>
         </div>
@@ -92,11 +92,11 @@ export function SpendingChart({ data, hideNumbers: hideProp }: SpendingChartProp
                       const item = payload[0].payload as CategorySpend;
                       const share = ((item.total / totalExpense) * 100).toFixed(1);
                       return (
-                        <div className="glass-strong px-3 py-2 text-xs border border-[var(--glass-border)] rounded-[var(--radius-control)] shadow-md">
-                          <p className="font-semibold text-[var(--text)]">
+                        <div className="glass-strong px-3 py-2 text-xs border border-(--glass-border) rounded-(--radius-control) shadow-md">
+                          <p className="font-semibold text-(--text)">
                             {item.name}
                           </p>
-                          <p className="text-[var(--text-muted)] num mt-0.5">
+                          <p className="text-(--text-muted) num mt-0.5">
                             {hideNumbers ? "••••••" : formatIDR(BigInt(item.total))} ({share}%)
                           </p>
                         </div>
@@ -112,7 +112,7 @@ export function SpendingChart({ data, hideNumbers: hideProp }: SpendingChartProp
       </div>
 
       {/* Category breakdown rows */}
-      <div className="mt-4 pt-3 border-t border-[var(--glass-border)] space-y-2">
+      <div className="mt-4 pt-3 border-t border-(--glass-border) space-y-2">
         {chartData.slice(0, 5).map((item, index) => {
           const share = ((item.total / totalExpense) * 100).toFixed(1);
           const color = PALETTE[index % PALETTE.length];
@@ -126,11 +126,11 @@ export function SpendingChart({ data, hideNumbers: hideProp }: SpendingChartProp
                   className="w-2.5 h-2.5 rounded-full shrink-0"
                   style={{ backgroundColor: color }}
                 />
-                <span className="text-[var(--text)] truncate">{item.name}</span>
+                <span className="text-(--text) truncate">{item.name}</span>
               </div>
               <div className="flex items-center gap-3 shrink-0 num">
-                <span className="text-[var(--text-muted)]">{share}%</span>
-                <span className="font-medium text-[var(--text)]">
+                <span className="text-(--text-muted)">{share}%</span>
+                <span className="font-medium text-(--text)">
                   {hideNumbers ? "••••••" : formatIDR(BigInt(item.total))}
                 </span>
               </div>

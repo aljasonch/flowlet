@@ -155,7 +155,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
     <form onSubmit={handleSubmit} className="glass-strong p-6 space-y-5">
       {/* Asset Type */}
       <div>
-        <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+        <label className="block text-xs font-medium text-(--text-muted) mb-1">
           Asset type
         </label>
         <Select
@@ -174,7 +174,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
       {/* Symbol & Name */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Symbol / Ticker
           </label>
           <Input
@@ -187,7 +187,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Asset name
           </label>
           <Input
@@ -203,7 +203,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
       {/* Platform & Currency */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Platform / Broker (optional)
           </label>
           <Input
@@ -215,7 +215,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Price currency
           </label>
           <SegmentedToggle
@@ -232,7 +232,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
       {/* Quantity & Avg Cost */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Quantity
           </label>
           <Input
@@ -242,13 +242,13 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
             inputMode="decimal"
             required
           />
-          <p className="text-[11px] text-[var(--text-muted)] num mt-1">
+          <p className="text-[11px] text-(--text-muted) num mt-1">
             Live preview: = {parsedQty ? parsedQty.replace(".", ",") : "-"}
           </p>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Average cost per unit ({currency})
           </label>
           <Input
@@ -258,7 +258,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
             inputMode="decimal"
             required
           />
-          <p className="text-[11px] text-[var(--text-muted)] num mt-1">
+          <p className="text-[11px] text-(--text-muted) num mt-1">
             Live preview: = {parsedCost ? formatPrice(parsedCost, currency) : "-"}
           </p>
         </div>
@@ -267,7 +267,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
       {/* Crypto Price Source */}
       {assetType === "crypto" && (
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Price source
           </label>
           <SegmentedToggle
@@ -284,7 +284,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
       {/* CoinGecko Coin ID */}
       {assetType === "crypto" && priceSource === "coingecko" && (
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             CoinGecko Coin ID
           </label>
           <Input
@@ -293,7 +293,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
             placeholder="e.g. bitcoin, ethereum, solana"
             required
           />
-          <p className="text-[11px] text-[var(--text-muted)] mt-1">
+          <p className="text-[11px] text-(--text-muted) mt-1">
             The exact coin identifier from coingecko.com
           </p>
         </div>
@@ -302,7 +302,7 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
       {/* Manual Price Field */}
       {priceSource === "manual" && (
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Current unit price ({currency})
           </label>
           <Input
@@ -311,14 +311,14 @@ export function HoldingForm({ initialData, isEdit = false }: HoldingFormProps) {
             placeholder="e.g. 9800"
             inputMode="decimal"
           />
-          <p className="text-[11px] text-[var(--text-muted)] num mt-1">
+          <p className="text-[11px] text-(--text-muted) num mt-1">
             Live preview: = {parsedPrice ? formatPrice(parsedPrice, currency) : "-"}
           </p>
         </div>
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--glass-border)]">
+      <div className="flex items-center justify-end gap-3 pt-3 border-t border-(--glass-border)">
         <Link href="/portfolio">
           <Button type="button" variant="secondary" disabled={isSubmitting}>
             Cancel

@@ -32,18 +32,18 @@ export function SummaryCards({
       <div className="sm:hidden glass p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <span className="block text-[11px] font-medium text-[var(--text-muted)]">
+            <span className="block text-[11px] font-medium text-(--text-muted)">
               Net cash flow
             </span>
             <div
               className={`mt-0.5 text-2xl font-bold num tracking-tight ${
                 hideNumbers
-                  ? "text-[var(--text)]"
+                  ? "text-(--text)"
                   : isNetPositive
-                    ? "text-[var(--positive)]"
+                    ? "text-(--positive)"
                     : isNetNegative
-                      ? "text-[var(--negative)]"
-                      : "text-[var(--text)]"
+                      ? "text-(--negative)"
+                      : "text-(--text)"
               }`}
             >
               {hideNumbers
@@ -56,10 +56,10 @@ export function SummaryCards({
           <span
             className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
               isNetPositive
-                ? "bg-[var(--positive)]/15 text-[var(--positive)]"
+                ? "bg-(--positive)/15 text-(--positive)"
                 : isNetNegative
-                  ? "bg-[var(--negative)]/15 text-[var(--negative)]"
-                  : "bg-black/5 dark:bg-white/10 text-[var(--text-muted)]"
+                  ? "bg-(--negative)/15 text-(--negative)"
+                  : "bg-black/5 dark:bg-white/10 text-(--text-muted)"
             }`}
           >
             {isNetPositive ? "Surplus" : isNetNegative ? "Deficit" : "Balanced"}
@@ -67,20 +67,20 @@ export function SummaryCards({
         </div>
 
         {/* Sub-row: Income & Expenses split */}
-        <div className="grid grid-cols-2 gap-3 pt-2.5 border-t border-[var(--glass-border)]">
+        <div className="grid grid-cols-2 gap-3 pt-2.5 border-t border-(--glass-border)">
           <div>
-            <span className="block text-[10px] font-medium text-[var(--text-muted)]">
+            <span className="block text-[10px] font-medium text-(--text-muted)">
               Income
             </span>
-            <span className="text-sm font-semibold text-[var(--positive)] num block mt-0.5">
+            <span className="text-sm font-semibold text-(--positive) num block mt-0.5">
               {hideNumbers ? "Rp ••••••" : formatIDR(incomeBig)}
             </span>
           </div>
           <div>
-            <span className="block text-[10px] font-medium text-[var(--text-muted)]">
+            <span className="block text-[10px] font-medium text-(--text-muted)">
               Expenses
             </span>
-            <span className="text-sm font-semibold text-[var(--text)] num block mt-0.5">
+            <span className="text-sm font-semibold text-(--text) num block mt-0.5">
               {hideNumbers ? "Rp ••••••" : formatIDR(expensesBig)}
             </span>
           </div>
@@ -91,38 +91,38 @@ export function SummaryCards({
       <div className="hidden sm:grid sm:grid-cols-3 gap-4">
         {/* Income Card */}
         <div className="glass p-5">
-          <span className="block text-xs font-medium text-[var(--text-muted)]">
+          <span className="block text-xs font-medium text-(--text-muted)">
             Total income
           </span>
-          <div className="mt-2 text-2xl font-semibold text-[var(--text)] num tracking-tight">
+          <div className="mt-2 text-2xl font-semibold text-(--text) num tracking-tight">
             {hideNumbers ? "Rp ••••••" : formatIDR(incomeBig)}
           </div>
         </div>
 
         {/* Expenses Card */}
         <div className="glass p-5">
-          <span className="block text-xs font-medium text-[var(--text-muted)]">
+          <span className="block text-xs font-medium text-(--text-muted)">
             Total expenses
           </span>
-          <div className="mt-2 text-2xl font-semibold text-[var(--text)] num tracking-tight">
+          <div className="mt-2 text-2xl font-semibold text-(--text) num tracking-tight">
             {hideNumbers ? "Rp ••••••" : formatIDR(expensesBig)}
           </div>
         </div>
 
         {/* Net Card */}
         <div className="glass p-5">
-          <span className="block text-xs font-medium text-[var(--text-muted)]">
+          <span className="block text-xs font-medium text-(--text-muted)">
             Net cash flow
           </span>
           <div
             className={`mt-2 text-2xl font-semibold num tracking-tight ${
               hideNumbers
-                ? "text-[var(--text)]"
+                ? "text-(--text)"
                 : isNetPositive
-                  ? "text-[var(--positive)]"
+                  ? "text-(--positive)"
                   : isNetNegative
-                    ? "text-[var(--negative)]"
-                    : "text-[var(--text)]"
+                    ? "text-(--negative)"
+                    : "text-(--text)"
             }`}
           >
             {hideNumbers

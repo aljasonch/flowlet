@@ -14,7 +14,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium rounded-[var(--radius-control)] transition-all duration-[var(--dur-fast)] ease-[var(--ease)] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)]";
+      "inline-flex items-center justify-center font-medium rounded-(--radius-control) transition-all duration-(--dur-fast) ease-(--ease) active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-(--accent)";
 
     const sizeStyles = {
       sm: "px-3 py-1.5 text-xs",
@@ -24,12 +24,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantStyles = {
       primary:
-        "bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90 shadow-sm",
+        "bg-(--accent) text-(--accent-contrast) hover:opacity-90 shadow-sm",
       secondary:
-        "glass text-[var(--text)] hover:bg-[var(--glass-strong)] border border-[var(--glass-border)]",
-      danger: "bg-[var(--negative)] text-white hover:opacity-90 shadow-sm",
+        "glass text-(--text) hover:bg-(--glass-strong) border border-(--glass-border)",
+      danger: "bg-(--negative) text-white hover:opacity-90 shadow-sm",
       ghost:
-        "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-black/5 dark:hover:bg-white/5",
+        "text-(--text-muted) hover:text-(--text) hover:bg-black/5 dark:hover:bg-white/5",
     }[variant];
 
     return (

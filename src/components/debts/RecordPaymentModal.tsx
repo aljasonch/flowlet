@@ -113,12 +113,12 @@ export function RecordPaymentModal({
             onChange={(e) => setAmount(e.target.value)}
             required
           />
-          <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)] mt-1">
+          <div className="flex items-center justify-between text-[11px] text-(--text-muted) mt-1">
             <span>Remaining balance: {formatIDR(BigInt(debt.remaining_amount))}</span>
             <button
               type="button"
               onClick={() => setAmount(String(debt.remaining_amount))}
-              className="text-[var(--accent)] hover:underline font-medium"
+              className="text-(--accent) hover:underline font-medium"
             >
               Pay Full Balance
             </button>
@@ -135,19 +135,19 @@ export function RecordPaymentModal({
         />
 
         {/* Cashflow Sync Option */}
-        <div className="p-3 glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] space-y-3">
+        <div className="p-3 glass-strong rounded-(--radius-control) border border-(--glass-border) space-y-3">
           <label className="flex items-start gap-2.5 cursor-pointer">
             <input
               type="checkbox"
               checked={recordToCashflow}
               onChange={(e) => setRecordToCashflow(e.target.checked)}
-              className="mt-0.5 rounded border-[var(--glass-border)] text-[var(--accent)] focus:ring-[var(--accent)]"
+              className="mt-0.5 rounded border-(--glass-border) text-(--accent) focus:ring-(--accent)"
             />
             <div>
-              <span className="text-xs font-semibold text-[var(--text)] block">
+              <span className="text-xs font-semibold text-(--text) block">
                 Record to Cash Flow transaction history
               </span>
-              <span className="text-[11px] text-[var(--text-muted)] block mt-0.5">
+              <span className="text-[11px] text-(--text-muted) block mt-0.5">
                 {isDebt
                   ? "Automatically creates a Realized Expense transaction on the payment date."
                   : "Automatically creates a Realized Income transaction on the payment date."}
@@ -156,7 +156,7 @@ export function RecordPaymentModal({
           </label>
 
           {recordToCashflow && (
-            <div className="pt-2 border-t border-[var(--glass-border)]">
+            <div className="pt-2 border-t border-(--glass-border)">
               {isDebt ? (
                 <Select
                   label="Expense Category"
@@ -186,12 +186,12 @@ export function RecordPaymentModal({
 
         {/* Note */}
         <div>
-          <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+          <label className="block text-xs font-medium text-(--text-muted) mb-1">
             Payment Note (Optional)
           </label>
           <input
             type="text"
-            className="w-full glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] px-3 py-2 text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+            className="w-full glass-strong rounded-(--radius-control) border border-(--glass-border) px-3 py-2 text-sm text-(--text) placeholder-(--text-muted) focus:outline-none focus:ring-2 focus:ring-(--accent)"
             placeholder={isDebt ? "e.g., 1st installment" : "e.g., Bank transfer"}
             value={note}
             onChange={(e) => setNote(e.target.value)}
@@ -200,7 +200,7 @@ export function RecordPaymentModal({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-3 pt-2 border-t border-[var(--glass-border)]">
+        <div className="flex items-center justify-end gap-3 pt-2 border-t border-(--glass-border)">
           <Button
             type="button"
             variant="secondary"

@@ -23,7 +23,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="block text-xs font-medium text-[var(--text-muted)] mb-1"
+            className="block text-xs font-medium text-(--text-muted) mb-1"
           >
             {label}
           </label>
@@ -31,8 +31,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         <select
           ref={ref}
           id={selectId}
-          className={`w-full glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] px-3 py-2 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition-colors ${
-            error ? "border-[var(--negative)] focus:ring-[var(--negative)]" : ""
+          className={`w-full glass-strong rounded-(--radius-control) border border-(--glass-border) px-3 py-2 text-sm text-(--text) focus:outline-none focus:ring-2 focus:ring-(--accent) transition-colors ${
+            error ? "border-(--negative) focus:ring-(--negative)" : ""
           } ${className}`}
           {...props}
         >
@@ -43,7 +43,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           ))}
         </select>
         {error && (
-          <p className="mt-1 text-xs text-[var(--negative)]">{error}</p>
+          <p className="mt-1 text-xs text-(--negative)">{error}</p>
         )}
       </div>
     );

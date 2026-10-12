@@ -3,6 +3,7 @@
 import React, { useState, useSyncExternalStore } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { formatIDR } from "@/lib/format";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 const emptySubscribe = () => () => {};
 
@@ -62,10 +63,10 @@ function SinglePiePanel({
     <div className="glass p-5 flex flex-col justify-between">
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-[var(--text)]">
+          <h3 className="text-base font-semibold text-(--text)">
             {title}
           </h3>
-          <span className="text-xs text-[var(--text-muted)] num">
+          <span className="text-xs text-(--text-muted) num">
             {subtitle}
           </span>
         </div>
@@ -99,12 +100,12 @@ function SinglePiePanel({
                     if (active && payload && payload.length) {
                       const item = payload[0].payload as FormattedChartItem;
                       return (
-                        <div className="glass-strong px-3 py-2 text-xs border border-[var(--glass-border)] rounded-[var(--radius-control)] shadow-md">
-                          <p className="font-semibold text-[var(--text)]">
+                        <div className="glass-strong px-3 py-2 text-xs border border-(--glass-border) rounded-(--radius-control) shadow-md">
+                          <p className="font-semibold text-(--text)">
                             {item.name}
                             {item.subName ? ` · ${item.subName}` : ""}
                           </p>
-                          <p className="text-[var(--text-muted)] num mt-0.5">
+                          <p className="text-(--text-muted) num mt-0.5">
                             {hideNumbers ? "••••••" : formatIDR(BigInt(item.value))} ({item.share}%)
                           </p>
                         </div>
@@ -120,7 +121,7 @@ function SinglePiePanel({
       </div>
 
       {/* Breakdown list */}
-      <div className="mt-4 pt-3 border-t border-[var(--glass-border)] space-y-2 max-h-48 overflow-y-auto">
+      <div className="mt-4 pt-3 border-t border-(--glass-border) space-y-2 max-h-48 overflow-y-auto">
         {items.map((item, index) => {
           const color = palette[index % palette.length];
           return (
@@ -133,18 +134,18 @@ function SinglePiePanel({
                   className="w-2.5 h-2.5 rounded-full shrink-0"
                   style={{ backgroundColor: color }}
                 />
-                <span className="text-[var(--text)] font-medium truncate">
+                <span className="text-(--text) font-medium truncate">
                   {item.name}
                   {item.subName && (
-                    <span className="text-[var(--text-muted)] font-normal ml-1">
+                    <span className="text-(--text-muted) font-normal ml-1">
                       ({item.subName})
                     </span>
                   )}
                 </span>
               </div>
               <div className="flex items-center gap-3 shrink-0 num">
-                <span className="text-[var(--text-muted)]">{item.share}%</span>
-                <span className="font-semibold text-[var(--text)]">
+                <span className="text-(--text-muted)">{item.share}%</span>
+                <span className="font-semibold text-(--text)">
                   {hideNumbers ? "••••••" : formatIDR(BigInt(item.value))}
                 </span>
               </div>
@@ -163,6 +164,7 @@ export function AllocationChart({
   hideNumbers = false,
 }: AllocationChartProps) {
   const [mobileTab, setMobileTab] = useState<"type" | "asset">("type");
+  const isLg = useMediaQuery("lg");
 
   // Normalize typeData from props or legacy data
   const rawTypes =
@@ -197,10 +199,10 @@ export function AllocationChart({
   if (formattedTypes.length === 0 && formattedAssets.length === 0) {
     return (
       <div className="glass p-5">
-        <h3 className="text-base font-semibold text-[var(--text)]">
+        <h3 className="text-base font-semibold text-(--text)">
           Asset allocation
         </h3>
-        <div className="py-12 text-center text-sm text-[var(--text-muted)]">
+        <div className="py-12 text-center text-sm text-(--text-muted)">
           No priced assets available for allocation.
         </div>
       </div>
@@ -212,15 +214,15 @@ export function AllocationChart({
     return (
       <div className="space-y-4">
         {/* Mobile View with Segmented Toggle (lg:hidden) */}
-        <div className="lg:hidden space-y-3">
-          <div className="flex p-1 glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] text-xs">
+        <div className="lg:hidden space-y-3" hidden={isLg}>
+          <div className="flex p-1 glass-strong rounded-(--radius-control) border border-(--glass-border) text-xs">
             <button
               type="button"
               onClick={() => setMobileTab("type")}
-              className={`flex-1 py-1.5 rounded-[var(--radius-control)] font-medium transition-all ${
+              className={`flex-1 py-1.5 rounded-(--radius-control) font-medium transition-all ${
                 mobileTab === "type"
-                  ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-(--accent) text-(--accent-contrast) shadow-sm"
+                  : "text-(--text-muted) hover:text-(--text)"
               }`}
             >
               By Asset Type
@@ -228,17 +230,17 @@ export function AllocationChart({
             <button
               type="button"
               onClick={() => setMobileTab("asset")}
-              className={`flex-1 py-1.5 rounded-[var(--radius-control)] font-medium transition-all ${
+              className={`flex-1 py-1.5 rounded-(--radius-control) font-medium transition-all ${
                 mobileTab === "asset"
-                  ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-sm"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-(--accent) text-(--accent-contrast) shadow-sm"
+                  : "text-(--text-muted) hover:text-(--text)"
               }`}
             >
               By Asset
             </button>
           </div>
 
-          {mobileTab === "type" ? (
+          {!isLg && mobileTab === "type" ? (
             <SinglePiePanel
               title="Allocation by asset type"
               subtitle={`${formattedTypes.length} ${
@@ -249,38 +251,44 @@ export function AllocationChart({
               hideNumbers={hideNumbers}
             />
           ) : (
-            <SinglePiePanel
-              title="Allocation by asset"
-              subtitle={`${formattedAssets.length} ${
-                formattedAssets.length === 1 ? "asset" : "assets"
-              }`}
-              items={formattedAssets}
-              palette={PALETTE}
-              hideNumbers={hideNumbers}
-            />
+            !isLg && (
+              <SinglePiePanel
+                title="Allocation by asset"
+                subtitle={`${formattedAssets.length} ${
+                  formattedAssets.length === 1 ? "asset" : "assets"
+                }`}
+                items={formattedAssets}
+                palette={PALETTE}
+                hideNumbers={hideNumbers}
+              />
+            )
           )}
         </div>
 
         {/* Desktop View Side-by-Side (hidden lg:grid) */}
         <div className="hidden lg:grid lg:grid-cols-2 gap-4">
-          <SinglePiePanel
-            title="Allocation by asset type"
-            subtitle={`${formattedTypes.length} ${
-              formattedTypes.length === 1 ? "type" : "types"
-            }`}
-            items={formattedTypes}
-            palette={PALETTE}
-            hideNumbers={hideNumbers}
-          />
-          <SinglePiePanel
-            title="Allocation by asset"
-            subtitle={`${formattedAssets.length} ${
-              formattedAssets.length === 1 ? "asset" : "assets"
-            }`}
-            items={formattedAssets}
-            palette={PALETTE}
-            hideNumbers={hideNumbers}
-          />
+          {isLg && (
+            <>
+              <SinglePiePanel
+                title="Allocation by asset type"
+                subtitle={`${formattedTypes.length} ${
+                  formattedTypes.length === 1 ? "type" : "types"
+                }`}
+                items={formattedTypes}
+                palette={PALETTE}
+                hideNumbers={hideNumbers}
+              />
+              <SinglePiePanel
+                title="Allocation by asset"
+                subtitle={`${formattedAssets.length} ${
+                  formattedAssets.length === 1 ? "asset" : "assets"
+                }`}
+                items={formattedAssets}
+                palette={PALETTE}
+                hideNumbers={hideNumbers}
+              />
+            </>
+          )}
         </div>
       </div>
     );

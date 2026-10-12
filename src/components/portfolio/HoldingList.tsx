@@ -82,7 +82,7 @@ export function HoldingList({
   if (holdings.length === 0) {
     return (
       <div className="glass p-8 text-center flex flex-col items-center justify-center space-y-4">
-        <p className="text-sm text-[var(--text-muted)]">
+        <p className="text-sm text-(--text-muted)">
           No holdings in your portfolio yet.
         </p>
         <Link href="/portfolio/new">
@@ -112,35 +112,35 @@ export function HoldingList({
           return (
             <div
               key={h.id}
-              className="glass p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-[var(--dur-fast)]"
+              className="glass p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-(--dur-fast)"
             >
               {/* Asset Info */}
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-bold text-base text-[var(--text)] tracking-tight">
+                  <span className="font-bold text-base text-(--text) tracking-tight">
                     {h.symbol}
                   </span>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[var(--text-muted)] font-medium capitalize">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-(--text-muted) font-medium capitalize">
                     {h.asset_type}
                   </span>
                   {h.platform && (
-                    <span className="text-xs text-[var(--text-muted)]">
+                    <span className="text-xs text-(--text-muted)">
                       via {h.platform}
                     </span>
                   )}
                   {hasPrice && isStale && (
-                    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-[var(--chart-4)]/15 text-[var(--chart-4)] font-medium">
+                    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-(--chart-4)/15 text-(--chart-4) font-medium">
                       <Clock className="w-3 h-3" />
                       Stale
                     </span>
                   )}
                 </div>
 
-                <div className="text-xs text-[var(--text-muted)] mt-1 truncate">
+                <div className="text-xs text-(--text-muted) mt-1 truncate">
                   {h.name}
                 </div>
 
-                <div className="flex items-center gap-3 text-xs text-[var(--text-muted)] num mt-2">
+                <div className="flex items-center gap-3 text-xs text-(--text-muted) num mt-2">
                   <span>Qty: {hideNumbers ? "••••" : formatQuantity(h.quantity)}</span>
                   <span>•</span>
                   <span>
@@ -158,9 +158,9 @@ export function HoldingList({
               </div>
 
               {/* Valuation & Gain/Loss */}
-              <div className="flex items-center justify-between sm:justify-end gap-6 pt-3 sm:pt-0 border-t sm:border-0 border-[var(--glass-border)] shrink-0">
+              <div className="flex items-center justify-between sm:justify-end gap-6 pt-3 sm:pt-0 border-t sm:border-0 border-(--glass-border) shrink-0">
                 <div className="text-left sm:text-right">
-                  <div className="text-base font-semibold text-[var(--text)] num">
+                  <div className="text-base font-semibold text-(--text) num">
                     {hideNumbers
                       ? "Rp ••••••"
                       : h.value_idr != null
@@ -173,17 +173,17 @@ export function HoldingList({
                   {/* Unrealized Gain/Loss */}
                   <div className="text-xs num mt-0.5 flex items-center sm:justify-end gap-1">
                     {hideNumbers ? (
-                      <span className="text-[var(--text-muted)] font-medium">
+                      <span className="text-(--text-muted) font-medium">
                         ••••••
                       </span>
                     ) : gainPctNum != null ? (
                       <span
                         className={`inline-flex items-center font-medium ${
                           isPositiveGain
-                            ? "text-[var(--positive)]"
+                            ? "text-(--positive)"
                             : isNegativeGain
-                              ? "text-[var(--negative)]"
-                              : "text-[var(--text-muted)]"
+                              ? "text-(--negative)"
+                              : "text-(--text-muted)"
                         }`}
                       >
                         {isPositiveGain && <ArrowUpRight className="w-3.5 h-3.5 mr-0.5" />}
@@ -200,14 +200,14 @@ export function HoldingList({
                         {" "}({formatPercent(h.gain_pct)})
                       </span>
                     ) : (
-                      <span className="text-[var(--text-muted)]">
+                      <span className="text-(--text-muted)">
                         {hasPrice ? "No cost baseline" : "Unpriced position"}
                       </span>
                     )}
                   </div>
 
                   {h.price_as_of && (
-                    <div className="text-[10px] text-[var(--text-muted)] mt-0.5">
+                    <div className="text-[10px] text-(--text-muted) mt-0.5">
                       Updated {formatTimeAgo(h.price_as_of)}
                     </div>
                   )}
@@ -217,7 +217,7 @@ export function HoldingList({
                 <div className="flex items-center gap-1">
                   <Link
                     href={`/portfolio/${h.id}/edit`}
-                    className="p-1.5 rounded-[var(--radius-control)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-[var(--dur-fast)]"
+                    className="p-1.5 rounded-(--radius-control) text-(--text-muted) hover:text-(--text) hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-(--dur-fast)"
                     aria-label={`Edit ${h.symbol}`}
                   >
                     <Pencil className="w-4 h-4" />
@@ -225,7 +225,7 @@ export function HoldingList({
                   <button
                     type="button"
                     onClick={() => setDeletingId(h.id)}
-                    className="p-1.5 rounded-[var(--radius-control)] text-[var(--text-muted)] hover:text-[var(--negative)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-[var(--dur-fast)]"
+                    className="p-1.5 rounded-(--radius-control) text-(--text-muted) hover:text-(--negative) hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-(--dur-fast)"
                     aria-label={`Delete ${h.symbol}`}
                   >
                     <Trash2 className="w-4 h-4" />

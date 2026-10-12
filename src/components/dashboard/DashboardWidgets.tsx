@@ -120,28 +120,28 @@ export function SummaryCardsSkeleton() {
       <div className="sm:hidden glass p-4 space-y-3">
         <Skeleton className="h-4 w-24" />
         <Skeleton className="h-8 w-44" />
-        <div className="grid grid-cols-2 gap-3 pt-2.5 border-t border-[var(--glass-border)]">
-          <Skeleton className="h-10 rounded-[var(--radius-control)]" />
-          <Skeleton className="h-10 rounded-[var(--radius-control)]" />
+        <div className="grid grid-cols-2 gap-3 pt-2.5 border-t border-(--glass-border)">
+          <Skeleton className="h-10 rounded-(--radius-control)" />
+          <Skeleton className="h-10 rounded-(--radius-control)" />
         </div>
       </div>
       <div className="hidden sm:grid sm:grid-cols-3 gap-4">
-        <Skeleton className="h-28 rounded-[var(--radius-panel)]" />
-        <Skeleton className="h-28 rounded-[var(--radius-panel)]" />
-        <Skeleton className="h-28 rounded-[var(--radius-panel)]" />
+        <Skeleton className="h-28 rounded-(--radius-panel)" />
+        <Skeleton className="h-28 rounded-(--radius-panel)" />
+        <Skeleton className="h-28 rounded-(--radius-panel)" />
       </div>
     </>
   );
 }
 
 export function PortfolioCardSkeleton() {
-  return <Skeleton className="h-44 rounded-[var(--radius-panel)]" />;
+  return <Skeleton className="h-44 rounded-(--radius-panel)" />;
 }
 
 export function DebtsCardSkeleton() {
-  return <Skeleton className="h-44 rounded-[var(--radius-panel)]" />;
+  return <Skeleton className="h-44 rounded-(--radius-panel)" />;
 }
 
 export function ChartSkeleton() {
-  return <Skeleton className="h-64 rounded-[var(--radius-panel)]" />;
+  return <Skeleton className="h-64 rounded-(--radius-panel)" />;
 }

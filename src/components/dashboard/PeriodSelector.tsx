@@ -62,24 +62,24 @@ export function PeriodSelector({
         type="button"
         onClick={handlePrevious}
         aria-label="Previous period"
-        className="p-2 rounded-full glass border border-[var(--glass-border)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all duration-[var(--dur-fast)] shrink-0"
+        className="p-2 rounded-full glass border border-(--glass-border) text-(--text-muted) hover:text-(--text) hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all duration-(--dur-fast) shrink-0"
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
 
       {/* Center: Month & Date Range Info */}
       <div className="text-center flex-1 min-w-0">
-        <h2 className="text-base sm:text-lg font-bold text-[var(--text)] leading-tight truncate">
+        <h2 className="text-base sm:text-lg font-bold text-(--text) leading-tight truncate">
           {monthLabel}
         </h2>
-        <p className="text-xs text-[var(--text-muted)] num mt-0.5 truncate">
+        <p className="text-xs text-(--text-muted) num mt-0.5 truncate">
           {rangeLabel}
         </p>
         {!isCurrentPeriod && (
           <button
             type="button"
             onClick={handleCurrent}
-            className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-[var(--accent)] hover:underline focus:outline-none"
+            className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-(--accent) hover:underline focus:outline-none"
           >
             <Calendar className="w-3 h-3" />
             Current period
@@ -92,7 +92,7 @@ export function PeriodSelector({
         type="button"
         onClick={handleNext}
         aria-label="Next period"
-        className="p-2 rounded-full glass border border-[var(--glass-border)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all duration-[var(--dur-fast)] shrink-0"
+        className="p-2 rounded-full glass border border-(--glass-border) text-(--text-muted) hover:text-(--text) hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all duration-(--dur-fast) shrink-0"
       >
         <ChevronRight className="w-5 h-5" />
       </button>

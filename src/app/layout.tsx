@@ -30,24 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${ibmPlexSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans relative">
-        <div
-          aria-hidden="true"
-          className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]"
-        >
-          <div
-            style={{ backgroundColor: "var(--shape-a)" }}
-            className="absolute -top-[10vmin] -left-[10vmin] w-[50vmin] h-[50vmin] rounded-full"
-          />
-          <div
-            style={{ backgroundColor: "var(--shape-b)" }}
-            className="absolute top-[35%] -right-[15vmin] w-[55vmin] h-[55vmin] rounded-3xl"
-          />
-          <div
-            style={{ backgroundColor: "var(--shape-c)" }}
-            className="absolute -bottom-[15vmin] left-[20%] w-[50vmin] h-[50vmin] rounded-full"
-          />
-        </div>
+      <body className="min-h-full flex flex-col font-sans">
         <TimezoneCookie />
         {children}
       </body>

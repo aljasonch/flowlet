@@ -55,18 +55,18 @@ export function Dialog({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.22, ease: [0.2, 0, 0, 1] }}
-            className="relative z-10 w-full max-w-md glass-strong rounded-[var(--radius-panel)] border border-[var(--glass-border)] p-6 shadow-xl"
+            className="relative z-10 w-full max-w-md glass-strong rounded-(--radius-panel) border border-(--glass-border) p-6 shadow-xl"
           >
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2
                   id="dialog-title"
-                  className="text-lg font-semibold text-[var(--text)]"
+                  className="text-lg font-semibold text-(--text)"
                 >
                   {title}
                 </h2>
                 {description && (
-                  <p className="text-xs text-[var(--text-muted)] mt-1">
+                  <p className="text-xs text-(--text-muted) mt-1">
                     {description}
                   </p>
                 )}
@@ -75,7 +75,7 @@ export function Dialog({
                 type="button"
                 onClick={onClose}
                 aria-label="Close dialog"
-                className="text-[var(--text-muted)] hover:text-[var(--text)] p-1 rounded-[var(--radius-control)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                className="text-(--text-muted) hover:text-(--text) p-1 rounded-(--radius-control) hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-(--accent)"
               >
                 <X size={18} strokeWidth={1.75} />
               </button>

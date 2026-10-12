@@ -30,7 +30,7 @@ export function Logo({
         width="64"
         height="64"
         rx="16"
-        className="fill-[var(--accent)]"
+        className="fill-(--accent)"
       />
       <rect x="18" y="16" width="7" height="32" rx="3.5" fill="#FFFFFF" />
       <path
@@ -53,11 +53,11 @@ export function Logo({
     <div className="flex items-center gap-2.5">
       {mark}
       <div className="flex flex-col justify-center min-w-0">
-        <span className="text-base font-semibold text-[var(--text)] tracking-tight leading-tight">
+        <span className="text-base font-semibold text-(--text) tracking-tight leading-tight">
           Flowlet
         </span>
         {showSubtitle && (
-          <span className="text-xs text-[var(--text-muted)] leading-tight mt-0.5">
+          <span className="text-xs text-(--text-muted) leading-tight mt-0.5">
             Personal cash & assets
           </span>
         )}

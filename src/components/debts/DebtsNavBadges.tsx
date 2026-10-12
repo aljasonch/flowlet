@@ -11,7 +11,7 @@ export async function DesktopDebtsBadge() {
     <div className="ml-auto flex items-center gap-1.5 shrink-0">
       {unpaidDebtCount > 0 && (
         <span
-          className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[var(--negative)] text-white shadow-xs"
+          className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-(--negative) text-white shadow-xs"
           title={`${unpaidDebtCount} unpaid debts`}
         >
           {unpaidDebtCount}
@@ -19,7 +19,7 @@ export async function DesktopDebtsBadge() {
       )}
       {unpaidReceivableCount > 0 && (
         <span
-          className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[var(--positive)] text-white shadow-xs"
+          className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-(--positive) text-white shadow-xs"
           title={`${unpaidReceivableCount} unpaid receivables`}
         >
           {unpaidReceivableCount}
@@ -40,7 +40,7 @@ export async function MobileDebtsBadge() {
     <div className="absolute -top-1.5 -right-3 flex items-center gap-0.5">
       {unpaidDebtCount > 0 && (
         <span
-          className="text-[9px] font-bold px-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--negative)] text-white shadow-xs leading-none"
+          className="text-[9px] font-bold px-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-(--negative) text-white shadow-xs leading-none"
           title={`${unpaidDebtCount} unpaid debts`}
         >
           {unpaidDebtCount}
@@ -48,7 +48,7 @@ export async function MobileDebtsBadge() {
       )}
       {unpaidReceivableCount > 0 && (
         <span
-          className="text-[9px] font-bold px-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--positive)] text-white shadow-xs leading-none"
+          className="text-[9px] font-bold px-1 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-(--positive) text-white shadow-xs leading-none"
           title={`${unpaidReceivableCount} unpaid receivables`}
         >
           {unpaidReceivableCount}

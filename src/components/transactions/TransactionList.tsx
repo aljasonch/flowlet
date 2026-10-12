@@ -126,14 +126,14 @@ export function TransactionList({
       {/* Header and Add button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--text)]">Transactions</h1>
-          <p className="text-xs text-[var(--text-muted)] mt-1">
+          <h1 className="text-2xl font-semibold text-(--text)">Transactions</h1>
+          <p className="text-xs text-(--text-muted) mt-1">
             Period: {selectedMonth}
           </p>
         </div>
         <Link
           href="/transactions/new"
-          className="inline-flex items-center justify-center gap-2 py-2 px-4 rounded-[var(--radius-control)] bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-medium hover:opacity-90 transition-opacity active:scale-[0.98] shadow-sm self-start sm:self-auto"
+          className="inline-flex items-center justify-center gap-2 py-2 px-4 rounded-(--radius-control) bg-(--accent) text-(--accent-contrast) text-sm font-medium hover:opacity-90 transition-opacity active:scale-[0.98] shadow-sm self-start sm:self-auto"
         >
           <Plus size={18} strokeWidth={1.75} />
           <span>Add transaction</span>
@@ -150,8 +150,8 @@ export function TransactionList({
       )}
 
       {/* Filter and Search Bar */}
-      <div className="glass p-4 rounded-[var(--radius-panel)] border border-[var(--glass-border)] space-y-3">
-        <div className="flex items-center gap-2 text-xs font-semibold text-[var(--text-muted)]">
+      <div className="glass p-4 rounded-(--radius-panel) border border-(--glass-border) space-y-3">
+        <div className="flex items-center gap-2 text-xs font-semibold text-(--text-muted)">
           <Filter size={14} strokeWidth={1.75} />
           <span>Filters</span>
         </div>
@@ -159,26 +159,26 @@ export function TransactionList({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Month input / filter */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+            <label className="block text-xs font-medium text-(--text-muted) mb-1">
               Period (YYYY-MM)
             </label>
             <input
               type="month"
               value={selectedMonth}
               onChange={(e) => updateFilters("month", e.target.value)}
-              className="w-full glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] px-3 py-1.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              className="w-full glass-strong rounded-(--radius-control) border border-(--glass-border) px-3 py-1.5 text-sm text-(--text) focus:outline-none focus:ring-2 focus:ring-(--accent)"
             />
           </div>
 
           {/* Type filter */}
           <div>
-            <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+            <label className="block text-xs font-medium text-(--text-muted) mb-1">
               Type
             </label>
             <select
               value={selectedType}
               onChange={(e) => updateFilters("type", e.target.value)}
-              className="w-full glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] px-3 py-1.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              className="w-full glass-strong rounded-(--radius-control) border border-(--glass-border) px-3 py-1.5 text-sm text-(--text) focus:outline-none focus:ring-2 focus:ring-(--accent)"
             >
               <option value="all">All transactions</option>
               <option value="expense">Expenses</option>
@@ -189,13 +189,13 @@ export function TransactionList({
           {/* Category or Source filter (shown only when type is chosen) */}
           {selectedType !== "all" && (
             <div>
-              <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+              <label className="block text-xs font-medium text-(--text-muted) mb-1">
                 {selectedType === "expense" ? "Category" : "Income source"}
               </label>
               <select
                 value={selectedEntity}
                 onChange={(e) => updateFilters("entityId", e.target.value)}
-                className="w-full glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] px-3 py-1.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                className="w-full glass-strong rounded-(--radius-control) border border-(--glass-border) px-3 py-1.5 text-sm text-(--text) focus:outline-none focus:ring-2 focus:ring-(--accent)"
               >
                 <option value="all">
                   All {selectedType === "expense" ? "categories" : "sources"}
@@ -213,7 +213,7 @@ export function TransactionList({
 
           {/* Note Search Form */}
           <form onSubmit={handleSearchSubmit} className="sm:col-span-2 lg:col-span-1">
-            <label className="block text-xs font-medium text-[var(--text-muted)] mb-1">
+            <label className="block text-xs font-medium text-(--text-muted) mb-1">
               Search note
             </label>
             <div className="relative">
@@ -222,11 +222,11 @@ export function TransactionList({
                 type="text"
                 defaultValue={searchQuery}
                 placeholder="Search..."
-                className="w-full glass-strong rounded-[var(--radius-control)] border border-[var(--glass-border)] pl-8 pr-3 py-1.5 text-sm text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                className="w-full glass-strong rounded-(--radius-control) border border-(--glass-border) pl-8 pr-3 py-1.5 text-sm text-(--text) placeholder-(--text-muted) focus:outline-none focus:ring-2 focus:ring-(--accent)"
               />
               <Search
                 size={14}
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-(--text-muted) pointer-events-none"
               />
             </div>
           </form>
@@ -234,21 +234,21 @@ export function TransactionList({
       </div>
 
       {/* Transaction Table / List */}
-      <div className="glass rounded-[var(--radius-panel)] border border-[var(--glass-border)] overflow-hidden shadow-sm">
+      <div className="glass rounded-(--radius-panel) border border-(--glass-border) overflow-hidden shadow-sm">
         {optimisticTransactions.length === 0 ? (
           <div className="p-12 text-center space-y-3">
-            <p className="text-sm text-[var(--text-muted)]">
+            <p className="text-sm text-(--text-muted)">
               No transactions found for this period.
             </p>
             <Link
               href="/transactions/new"
-              className="inline-flex items-center justify-center py-2 px-4 rounded-[var(--radius-control)] bg-[var(--accent)] text-[var(--accent-contrast)] text-sm font-medium hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center py-2 px-4 rounded-(--radius-control) bg-(--accent) text-(--accent-contrast) text-sm font-medium hover:opacity-90 transition-opacity"
             >
               Add transaction
             </Link>
           </div>
         ) : (
-          <ul className="divide-y divide-[var(--glass-border)]">
+          <ul className="divide-y divide-(--glass-border)">
             <AnimatePresence initial={false}>
               {optimisticTransactions.map((tx) => {
                 const isExpense = tx.type === "expense";
@@ -267,15 +267,15 @@ export function TransactionList({
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-sm text-[var(--text)] truncate">
+                        <span className="font-semibold text-sm text-(--text) truncate">
                           {label}
                         </span>
-                        <span className="text-xs text-[var(--text-muted)] shrink-0">
+                        <span className="text-xs text-(--text-muted) shrink-0">
                           {tx.date}
                         </span>
                       </div>
                       {tx.note && (
-                        <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">
+                        <p className="text-xs text-(--text-muted) truncate mt-0.5">
                           {tx.note}
                         </p>
                       )}
@@ -285,8 +285,8 @@ export function TransactionList({
                       <span
                         className={`text-sm font-bold num ${
                           isExpense
-                            ? "text-[var(--text)]"
-                            : "text-[var(--positive)]"
+                            ? "text-(--text)"
+                            : "text-(--positive)"
                         }`}
                       >
                         {isExpense ? "-" : "+"}
@@ -296,7 +296,7 @@ export function TransactionList({
                       <div className="flex items-center gap-1">
                         <Link
                           href={`/transactions/${tx.id}/edit`}
-                          className="p-1 rounded-[var(--radius-control)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                          className="p-1 rounded-(--radius-control) text-(--text-muted) hover:text-(--text) hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                           aria-label="Edit transaction"
                         >
                           <Edit2 size={16} strokeWidth={1.75} />
@@ -305,7 +305,7 @@ export function TransactionList({
                           type="button"
                           onClick={() => setDeletingId(tx.id)}
                           disabled={isDeleting}
-                          className="p-1 rounded-[var(--radius-control)] text-[var(--text-muted)] hover:text-[var(--negative)] hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none"
+                          className="p-1 rounded-(--radius-control) text-(--text-muted) hover:text-(--negative) hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none"
                           aria-label="Delete transaction"
                         >
                           <Trash2 size={16} strokeWidth={1.75} />
@@ -321,7 +321,7 @@ export function TransactionList({
 
         {/* Load More Button */}
         {hasMore && (
-          <div className="p-4 border-t border-[var(--glass-border)] text-center">
+          <div className="p-4 border-t border-(--glass-border) text-center">
             <Button variant="secondary" size="sm" onClick={handleLoadMore}>
               Load more transactions
             </Button>

@@ -53,17 +53,17 @@ export function DebtView({
         {/* Utang Card */}
         <div className="glass p-5">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-medium text-[var(--text-muted)]">
+            <span className="text-xs font-medium text-(--text-muted)">
               Total Active Debts (Liabilities)
             </span>
-            <span className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--negative)]/15 text-[var(--negative)] font-semibold">
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-(--negative)/15 text-(--negative) font-semibold">
               {summary.unpaid_debt_count} unpaid
             </span>
           </div>
-          <div className="text-2xl font-bold text-[var(--negative)] num tracking-tight mt-2">
+          <div className="text-2xl font-bold text-(--negative) num tracking-tight mt-2">
             {hideNumbers ? "Rp ••••••" : formatIDR(unpaidDebtBig)}
           </div>
-          <p className="text-[11px] text-[var(--text-muted)] mt-1">
+          <p className="text-[11px] text-(--text-muted) mt-1">
             Money you owe to others
           </p>
         </div>
@@ -71,17 +71,17 @@ export function DebtView({
         {/* Piutang Card */}
         <div className="glass p-5">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-medium text-[var(--text-muted)]">
+            <span className="text-xs font-medium text-(--text-muted)">
               Total Active Receivables (Assets)
             </span>
-            <span className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--positive)]/15 text-[var(--positive)] font-semibold">
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-(--positive)/15 text-(--positive) font-semibold">
               {summary.unpaid_receivable_count} unpaid
             </span>
           </div>
-          <div className="text-2xl font-bold text-[var(--positive)] num tracking-tight mt-2">
+          <div className="text-2xl font-bold text-(--positive) num tracking-tight mt-2">
             {hideNumbers ? "Rp ••••••" : formatIDR(unpaidReceivableBig)}
           </div>
-          <p className="text-[11px] text-[var(--text-muted)] mt-1">
+          <p className="text-[11px] text-(--text-muted) mt-1">
             Money owed to you by others
           </p>
         </div>
@@ -89,13 +89,13 @@ export function DebtView({
 
       {/* Overdue Warning Banner if any */}
       {summary.overdue_count > 0 && (
-        <div className="glass p-4 border border-[var(--chart-4)]/40 flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 text-[var(--chart-4)] shrink-0" />
+        <div className="glass p-4 border border-(--chart-4)/40 flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 text-(--chart-4) shrink-0" />
           <div className="text-xs">
-            <span className="font-semibold text-[var(--text)]">
+            <span className="font-semibold text-(--text)">
               You have {summary.overdue_count} records past their due date!
             </span>
-            <p className="text-[var(--text-muted)] mt-0.5">
+            <p className="text-(--text-muted) mt-0.5">
               Check records marked with &ldquo;Overdue&rdquo; below to settle them promptly.
             </p>
           </div>
@@ -106,14 +106,14 @@ export function DebtView({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 glass p-4">
         <div className="flex flex-wrap items-center gap-2">
           {/* Type Filter Buttons */}
-          <div className="inline-flex rounded-[var(--radius-control)] p-1 glass-strong border border-[var(--glass-border)] text-xs">
+          <div className="inline-flex rounded-(--radius-control) p-1 glass-strong border border-(--glass-border) text-xs">
             <button
               type="button"
               onClick={() => setTypeFilter("all")}
-              className={`px-3 py-1 rounded-[var(--radius-control)] transition-colors ${
+              className={`px-3 py-1 rounded-(--radius-control) transition-colors ${
                 typeFilter === "all"
-                  ? "bg-[var(--accent)] text-[var(--accent-contrast)] font-medium"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-(--accent) text-(--accent-contrast) font-medium"
+                  : "text-(--text-muted) hover:text-(--text)"
               }`}
             >
               All
@@ -121,10 +121,10 @@ export function DebtView({
             <button
               type="button"
               onClick={() => setTypeFilter("debt")}
-              className={`px-3 py-1 rounded-[var(--radius-control)] transition-colors ${
+              className={`px-3 py-1 rounded-(--radius-control) transition-colors ${
                 typeFilter === "debt"
-                  ? "bg-[var(--negative)] text-white font-medium"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-(--negative) text-white font-medium"
+                  : "text-(--text-muted) hover:text-(--text)"
               }`}
             >
               Debts
@@ -132,10 +132,10 @@ export function DebtView({
             <button
               type="button"
               onClick={() => setTypeFilter("receivable")}
-              className={`px-3 py-1 rounded-[var(--radius-control)] transition-colors ${
+              className={`px-3 py-1 rounded-(--radius-control) transition-colors ${
                 typeFilter === "receivable"
-                  ? "bg-[var(--positive)] text-white font-medium"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-(--positive) text-white font-medium"
+                  : "text-(--text-muted) hover:text-(--text)"
               }`}
             >
               Receivables
@@ -143,14 +143,14 @@ export function DebtView({
           </div>
 
           {/* Status Filter Buttons */}
-          <div className="inline-flex rounded-[var(--radius-control)] p-1 glass-strong border border-[var(--glass-border)] text-xs">
+          <div className="inline-flex rounded-(--radius-control) p-1 glass-strong border border-(--glass-border) text-xs">
             <button
               type="button"
               onClick={() => setStatusFilter("active")}
-              className={`px-3 py-1 rounded-[var(--radius-control)] transition-colors ${
+              className={`px-3 py-1 rounded-(--radius-control) transition-colors ${
                 statusFilter === "active"
-                  ? "bg-[var(--accent)] text-[var(--accent-contrast)] font-medium"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-(--accent) text-(--accent-contrast) font-medium"
+                  : "text-(--text-muted) hover:text-(--text)"
               }`}
             >
               Unpaid
@@ -158,10 +158,10 @@ export function DebtView({
             <button
               type="button"
               onClick={() => setStatusFilter("all")}
-              className={`px-3 py-1 rounded-[var(--radius-control)] transition-colors ${
+              className={`px-3 py-1 rounded-(--radius-control) transition-colors ${
                 statusFilter === "all"
-                  ? "bg-[var(--accent)] text-[var(--accent-contrast)] font-medium"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-(--accent) text-(--accent-contrast) font-medium"
+                  : "text-(--text-muted) hover:text-(--text)"
               }`}
             >
               All Statuses
@@ -180,9 +180,9 @@ export function DebtView({
             title={hideNumbers ? "Show balances" : "Hide balances"}
           >
             {hideNumbers ? (
-              <EyeOff className="w-4 h-4 text-[var(--text-muted)]" />
+              <EyeOff className="w-4 h-4 text-(--text-muted)" />
             ) : (
-              <Eye className="w-4 h-4 text-[var(--text-muted)]" />
+              <Eye className="w-4 h-4 text-(--text-muted)" />
             )}
           </Button>
 

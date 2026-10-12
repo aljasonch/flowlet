@@ -8,11 +8,11 @@ export default function Loading() {
         <Skeleton className="h-9 w-28" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Skeleton className="h-28 rounded-[var(--radius-panel)]" />
-        <Skeleton className="h-28 rounded-[var(--radius-panel)]" />
-        <Skeleton className="h-28 rounded-[var(--radius-panel)]" />
+        <Skeleton className="h-28 rounded-(--radius-panel)" />
+        <Skeleton className="h-28 rounded-(--radius-panel)" />
+        <Skeleton className="h-28 rounded-(--radius-panel)" />
       </div>
-      <Skeleton className="h-64 rounded-[var(--radius-panel)]" />
+      <Skeleton className="h-64 rounded-(--radius-panel)" />
     </div>
   );
 }
