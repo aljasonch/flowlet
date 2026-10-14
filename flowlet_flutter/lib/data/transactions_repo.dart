@@ -4,12 +4,30 @@ import 'package:flowlet_flutter/core/supabase_client.dart';
 
 final _dateRegex = RegExp(r'^\d{4}-\d{2}-\d{2}$');
 
+bool _isLeapYear(int year) =>
+    year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+
+/// Real calendar-date check (validity only; dates stay `YYYY-MM-DD`
+/// strings, no DateTime day-shift logic).
+bool _isValidCalendarDate(String date) {
+  if (!_dateRegex.hasMatch(date)) return false;
+  final month = int.parse(date.substring(5, 7));
+  final day = int.parse(date.substring(8, 10));
+  if (month < 1 || month > 12) return false;
+  const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  var maxDay = daysInMonth[month - 1];
+  if (month == 2 && _isLeapYear(int.parse(date.substring(0, 4)))) {
+    maxDay = 29;
+  }
+  return day >= 1 && day <= maxDay;
+}
+
 int _asInt(dynamic v) {
   if (v == null) return 0;
   if (v is num) return v.toInt();
   if (v is String) {
     final s = v.trim();
-    return int.tryParse(s) ?? double.tryParse(s)?.toInt() ?? 0;
+    return int.tryParse(s) ?? 0;
   }
   return 0;
 }
@@ -29,7 +47,7 @@ String? validateTransactionInput({
   if (type != 'expense' && type != 'income') return 'Invalid transaction type';
   if (amount <= 0) return 'Amount must be greater than 0';
   if (amount > maxAmount) return 'Amount exceeds maximum limit';
-  if (!_dateRegex.hasMatch(date)) return 'Invalid date format';
+  if (!_isValidCalendarDate(date)) return 'Invalid date format';
   if (type == 'expense' && (categoryId == null || categoryId.isEmpty)) {
     return 'Please select a category';
   }
@@ -106,6 +124,11 @@ String _uid() {
   if (id == null) throw StateError('Not signed in');
   return id;
 }
+
+/// True for the signed-out error thrown by [_uid]. Screens map this to a
+/// login redirect alongside AuthException.
+bool isNotSignedInError(Object error) =>
+    error is StateError && error.message.contains('Not signed in');
 
 Future<List<Map<String, dynamic>>> _defaultListCaller({
   required String start,

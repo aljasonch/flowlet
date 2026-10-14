@@ -88,8 +88,7 @@ void main() {
       );
     });
 
-    test('invalid date and long note are blocked', () {
-      expect(
+    test('invalid date and long note are blocked', () {      expect(
         validateTransactionInput(
           type: 'expense',
           amount: 10000,
@@ -107,6 +106,37 @@ void main() {
           note: 'x' * 501,
         ),
         'Note cannot exceed 500 characters',
+      );
+    });
+
+    test('impossible calendar dates are rejected', () {
+      for (final d in [
+        '2026-13-99',
+        '2026-02-30',
+        '2026-00-10',
+        '2026-01-32',
+        '2023-02-29',
+        '2026-04-31',
+      ]) {
+        expect(
+          validateTransactionInput(
+            type: 'expense',
+            amount: 10000,
+            date: d,
+            categoryId: 'c1',
+          ),
+          'Invalid date format',
+          reason: d,
+        );
+      }
+      expect(
+        validateTransactionInput(
+          type: 'expense',
+          amount: 10000,
+          date: '2024-02-29',
+          categoryId: 'c1',
+        ),
+        isNull,
       );
     });
 
@@ -163,6 +193,19 @@ void main() {
       expect(p['category_id'], isNull);
       expect(p['source_id'], 's1');
       expect(p['note'], isNull);
+    });
+
+    test('fractional numeric strings are rejected, never truncated', () {
+      expect(txAmountOf({'amount': '25000.9'}), 0);
+      expect(
+        () => buildTransactionPayload({
+          'type': 'expense',
+          'amount': '25000.9',
+          'date': '2026-10-14',
+          'category_id': 'c1',
+        }),
+        throwsArgumentError,
+      );
     });
 
     test('invalid values throw ArgumentError', () {
@@ -278,6 +321,14 @@ void main() {
       final short = await listTransactions(year: 2026, month: 10, caller: fakeShort);
       expect(short.hasMore, isFalse);
       expect(short.items, hasLength(1));
+    });
+  });
+
+  group('isNotSignedInError', () {
+    test('maps the signed-out StateError to login', () {
+      expect(isNotSignedInError(StateError('Not signed in')), isTrue);
+      expect(isNotSignedInError(StateError('other problem')), isFalse);
+      expect(isNotSignedInError(ArgumentError('x')), isFalse);
     });
   });
 

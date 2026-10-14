@@ -196,6 +196,13 @@ class _TxListScreenState extends State<TxListScreen> {
     } on AuthException {
       if (!mounted) return;
       context.go('/login');
+    } on StateError catch (e) {
+      if (!mounted) return;
+      if (isNotSignedInError(e)) {
+        context.go('/login');
+      } else {
+        setState(() => _error = 'Could not load transactions. Try again.');
+      }
     } catch (_) {
       if (!mounted) return;
       setState(() => _error = 'Could not load transactions. Try again.');
@@ -310,7 +317,7 @@ class _TxListScreenState extends State<TxListScreen> {
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
                   ),
-                  onPressed: () => setPrivacy(hidden),
+                  onPressed: () => setPrivacy(!hidden),
                 ),
               ),
               FilledButton.icon(

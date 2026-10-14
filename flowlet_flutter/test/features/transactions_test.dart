@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flowlet_flutter/core/privacy.dart';
 import 'package:flowlet_flutter/features/transactions/tx_form_screen.dart';
 import 'package:flowlet_flutter/features/transactions/tx_list_screen.dart';
@@ -104,8 +105,7 @@ void main() {
       expect(saved.first['source_id'], 's1');
     });
 
-    testWidgets('edit mode shows Save changes', (tester) async {
-      await _pumpForm(
+    testWidgets('edit mode shows Save changes', (tester) async {      await _pumpForm(
         tester,
         initialData: const {
           'id': 't1',
@@ -119,6 +119,74 @@ void main() {
       );
       expect(find.text('Save changes'), findsOneWidget);
       expect(find.text('Edit transaction'), findsOneWidget);
+    });
+    testWidgets('edit mode without id shows error instead of crashing', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: TxFormScreen(
+              categories: _cats,
+              sources: _srcs,
+              initialData: const {
+                'type': 'expense',
+                'amount': 25000,
+                'date': '2026-10-10',
+                'category_id': 'c1',
+                'source_id': null,
+                'note': '',
+              },
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(find.text('Missing transaction id'), findsWidgets);
+    });
+
+    testWidgets('edit mode keeps archived current category selectable', (
+      tester,
+    ) async {
+      await _pumpForm(
+        tester,
+        categories: const [
+          {'id': 'c1', 'name': 'Food'},
+        ],
+        initialData: const {
+          'id': 't1',
+          'type': 'expense',
+          'amount': 25000,
+          'date': '2026-10-10',
+          'category_id': 'c-archived',
+          'category': {'id': 'c-archived', 'name': 'Old archived'},
+          'source_id': null,
+          'note': '',
+        },
+      );
+      expect(find.text('Old archived'), findsOneWidget);
+    });
+  });
+
+  group('TxListScreen privacy toggle', () {
+    testWidgets('toggle flips masked and unmasked state', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      privacyMode.value = false;
+      addTearDown(() => privacyMode.value = false);
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: TxListScreen())),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Hide balances'), findsOneWidget);
+      await tester.tap(find.byTooltip('Hide balances'));
+      await tester.pumpAndSettle();
+      expect(privacyMode.value, isTrue);
+      expect(find.byTooltip('Show balances'), findsOneWidget);
+      await tester.tap(find.byTooltip('Show balances'));
+      await tester.pumpAndSettle();
+      expect(privacyMode.value, isFalse);
     });
   });
 

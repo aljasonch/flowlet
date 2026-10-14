@@ -71,6 +71,10 @@ class _TxFormScreenState extends State<TxFormScreen> {
     if (_refsInjected) {
       _cats = widget.categories!;
       _srcs = widget.sources!;
+      if (_isEditing && initial != null) {
+        _cats = _withCurrent(_cats, _categoryId, _currentName(initial, 'category'));
+        _srcs = _withCurrent(_srcs, _sourceId, _currentName(initial, 'source'));
+      }
       _categoryId ??= _cats.isNotEmpty ? _cats.first['id'] : null;
       _sourceId ??= _srcs.isNotEmpty ? _srcs.first['id'] : null;
       _loadingRefs = false;
@@ -105,8 +109,10 @@ class _TxFormScreenState extends State<TxFormScreen> {
         }
       }
       final results = await Future.wait([
-        fetchCategories(),
-        fetchSources(),
+        // Edit mode loads archived refs too so the current value stays
+        // selectable; add mode only offers active refs.
+        fetchCategories(activeOnly: !_isEditing),
+        fetchSources(activeOnly: !_isEditing),
         _readLastUsed(),
       ]);
       if (!mounted) return;
@@ -125,6 +131,13 @@ class _TxFormScreenState extends State<TxFormScreen> {
       });
     } on AuthException {
       if (mounted) context.go('/login');
+    } on StateError catch (e) {
+      if (!mounted) return;
+      if (isNotSignedInError(e)) {
+        context.go('/login');
+      } else {
+        setState(() => _error = 'Could not load form data. Try again.');
+      }
     } catch (_) {
       if (!mounted) return;
       setState(() => _error = 'Could not load form data. Try again.');
@@ -138,6 +151,38 @@ class _TxFormScreenState extends State<TxFormScreen> {
       return preferred;
     }
     return options.isNotEmpty ? options.first['id'] : null;
+  }
+
+  /// Keeps the transaction's current ref selectable in edit mode when it is
+  /// archived (and therefore absent from the active-only options).
+  List<Map<String, String>> _withCurrent(
+    List<Map<String, String>> options,
+    String? currentId,
+    String? currentName,
+  ) {
+    if (currentId == null ||
+        currentId.isEmpty ||
+        options.any((o) => o['id'] == currentId)) {
+      return options;
+    }
+    return [
+      ...options,
+      {
+        'id': currentId,
+        'name': (currentName?.isNotEmpty ?? false) ? currentName! : 'Archived',
+      },
+    ];
+  }
+
+  String? _currentName(Map<String, dynamic> initial, String key) {
+    final nested = initial[key];
+    if (nested is Map) {
+      final n = nested['name'];
+      if (n is String && n.isNotEmpty) return n;
+    }
+    final flat = initial['${key}_name'];
+    if (flat is String && flat.isNotEmpty) return flat;
+    return null;
   }
 
   Future<List<String?>> _readLastUsed() async {
@@ -189,7 +234,14 @@ class _TxFormScreenState extends State<TxFormScreen> {
       if (widget.onSave != null) {
         await widget.onSave!(values);
       } else if (_isEditing) {
-        await updateTransaction(widget.transactionId!, values);
+        // Edit mode without a usable id (initialData-only instance) must
+        // surface an error, never crash on a null check.
+        final id =
+            widget.transactionId ?? widget.initialData?['id']?.toString();
+        if (id == null || id.isEmpty) {
+          throw ArgumentError('Missing transaction id');
+        }
+        await updateTransaction(id, values);
       } else {
         await createTransaction(values);
       }
