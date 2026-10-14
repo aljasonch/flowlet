@@ -1,12 +1,29 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import type { Database } from "@/types/database";
 import { coingecko } from "@/lib/prices/coingecko";
 import { fetchLiveUsdIdrRate } from "@/lib/prices/fx";
 import type { PriceCurrency, Quote } from "@/lib/prices/types";
 
-export async function POST() {
-  const supabase = await createClient();
+// Client for non-browser callers (e.g. the Flutter app) that authenticate
+// with an Authorization: Bearer <user-jwt> header instead of cookies.
+// Uses the anon key only; the JWT is verified by supabase.auth.getUser()
+// and RLS applies to every query. The service_role key is never used.
+function createBearerClient(token: string) {
+  return createSupabaseClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { global: { headers: { Authorization: `Bearer ${token}` } } }
+  );
+}
+
+export async function POST(req: NextRequest) {
+  const authHeader = req.headers.get("authorization");
+  const token =
+    authHeader?.startsWith("Bearer ") ? authHeader.slice(7).trim() : null;
+  const supabase = token ? createBearerClient(token) : await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
