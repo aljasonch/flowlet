@@ -76,8 +76,73 @@ void main() {
     expect(rows.first.expense, 2);
   });
 
-  test('dashboard RPC contract names', () {
-    const rpcs = [
+  test('month_summary parses bigint-as-String totals', () async {
+    Future<dynamic> fake(String f, {Map<String, dynamic>? params}) async {
+      return [
+        {
+          'total_income': '5000000',
+          'total_expense': '2000000',
+          'net': '3000000',
+        },
+      ];
+    }
+
+    final s = await fetchMonthSummary(2026, 10, rpc: fake);
+    expect(s.income, 5000000);
+    expect(s.expense, 2000000);
+    expect(s.net, 3000000);
+  });
+
+  test('month_summary maps null totals to 0', () async {
+    Future<dynamic> fake(String f, {Map<String, dynamic>? params}) async {
+      return [
+        {'total_income': null, 'total_expense': null, 'net': null},
+      ];
+    }
+
+    final s = await fetchMonthSummary(2026, 10, rpc: fake);
+    expect(s.income, 0);
+    expect(s.expense, 0);
+    expect(s.net, 0);
+  });
+
+  test('category/source/trend totals tolerate String and null', () async {
+    Future<dynamic> fakeCats(String f, {Map<String, dynamic>? params}) async {
+      return [
+        {'category_id': 'c1', 'name': 'Food', 'total': '150000'},
+        {'category_id': 'c2', 'name': 'Other', 'total': null},
+      ];
+    }
+    final cats = await fetchSpendingByCategory(2026, 10, rpc: fakeCats);
+    expect(cats[0].total, 150000);
+    expect(cats[1].total, 0);
+
+    Future<dynamic> fakeSrcs(String f, {Map<String, dynamic>? params}) async {
+      return [
+        {'source_id': 's1', 'name': 'Salary', 'total': '8000000'},
+        {'source_id': 's2', 'name': 'Other', 'total': null},
+      ];
+    }
+    final srcs = await fetchIncomeBySource(2026, 10, rpc: fakeSrcs);
+    expect(srcs[0].total, 8000000);
+    expect(srcs[1].total, 0);
+
+    Future<dynamic> fakeTrend(String f, {Map<String, dynamic>? params}) async {
+      return [
+        {
+          'year': 2026,
+          'month': 10,
+          'total_income': '1000',
+          'total_expense': null,
+        },
+      ];
+    }
+    final trend = await fetchMonthlyTrend(2026, 10, rpc: fakeTrend);
+    expect(trend.first.income, 1000);
+    expect(trend.first.expense, 0);
+  });
+
+  test('dashboard RPC contract names', () {    const rpcs = [
       'month_summary',
       'spending_by_category',
       'income_by_source',

@@ -38,6 +38,16 @@ Future<dynamic> _defaultRpc(String fn, {Map<String, dynamic>? params}) {
   return db.rpc(fn, params: params);
 }
 
+int _asInt(dynamic v) {
+  if (v == null) return 0;
+  if (v is num) return v.toInt();
+  if (v is String) {
+    final s = v.trim();
+    return int.tryParse(s) ?? double.tryParse(s)?.toInt() ?? 0;
+  }
+  return 0;
+}
+
 Future<MonthSummary> fetchMonthSummary(int year, int month,
     {RpcCaller? rpc}) async {
   final call = rpc ?? _defaultRpc;
@@ -48,9 +58,9 @@ Future<MonthSummary> fetchMonthSummary(int year, int month,
   if (rows.isEmpty) return const MonthSummary(0, 0, 0);
   final r = rows.first as Map;
   return MonthSummary(
-    (r['total_income'] as num).toInt(),
-    (r['total_expense'] as num).toInt(),
-    (r['net'] as num).toInt(),
+    _asInt(r['total_income']),
+    _asInt(r['total_expense']),
+    _asInt(r['net']),
   );
 }
 
@@ -66,7 +76,7 @@ Future<List<CatSpend>> fetchSpendingByCategory(int year, int month,
       CatSpend(
         (row as Map)['category_id'] as String,
         row['name'] as String,
-        (row['total'] as num).toInt(),
+        _asInt(row['total']),
       ),
   ];
 }
@@ -83,7 +93,7 @@ Future<List<SrcIncome>> fetchIncomeBySource(int year, int month,
       SrcIncome(
         (row as Map)['source_id'] as String,
         row['name'] as String,
-        (row['total'] as num).toInt(),
+        _asInt(row['total']),
       ),
   ];
 }
@@ -98,10 +108,10 @@ Future<List<TrendPoint>> fetchMonthlyTrend(int year, int month,
   return [
     for (final row in rows)
       TrendPoint(
-        ((row as Map)['year'] as num).toInt(),
-        (row['month'] as num).toInt(),
-        (row['total_income'] as num).toInt(),
-        (row['total_expense'] as num).toInt(),
+        _asInt((row as Map)['year']),
+        _asInt(row['month']),
+        _asInt(row['total_income']),
+        _asInt(row['total_expense']),
       ),
   ];
 }

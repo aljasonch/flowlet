@@ -18,6 +18,9 @@ const chartColors = <Color>[
 
 const _masked = 'Rp ••••••';
 
+String trendLabel(int year, int month) =>
+    '$month/${(year % 100).toString().padLeft(2, '0')}';
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -180,7 +183,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 16),
             _IncomeCard(srcs: _srcs),
             const SizedBox(height: 16),
-            _TrendCard(trend: _trend),
+            TrendCard(trend: _trend),
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
@@ -449,8 +452,8 @@ class _IncomeCard extends StatelessWidget {
   }
 }
 
-class _TrendCard extends StatelessWidget {
-  const _TrendCard({required this.trend});
+class TrendCard extends StatelessWidget {
+  const TrendCard({super.key, required this.trend});
   final List<TrendPoint> trend;
 
   @override
@@ -467,9 +470,18 @@ class _TrendCard extends StatelessWidget {
             if (trend.isEmpty)
               const Text('No trend data yet.')
             else
-              SizedBox(
-                height: 200,
-                child: BarChart(
+              ValueListenableBuilder<bool>(
+                valueListenable: privacyMode,
+                builder: (context, hidden, _) {
+                  if (hidden) {
+                    return const SizedBox(
+                      height: 200,
+                      child: Center(child: Text('Rp ••••••')),
+                    );
+                  }
+                  return SizedBox(
+                    height: 200,
+                    child: BarChart(
                   BarChartData(
                     maxY: _maxTotal([
                       for (final t in trend) ...[t.income, t.expense],
@@ -494,7 +506,7 @@ class _TrendCard extends StatelessWidget {
                             return Padding(
                               padding: const EdgeInsets.only(top: 4),
                               child: Text(
-                                '${trend[i].month}',
+                                trendLabel(trend[i].year, trend[i].month),
                                 style: const TextStyle(fontSize: 10),
                               ),
                             );
@@ -523,6 +535,8 @@ class _TrendCard extends StatelessWidget {
                     ],
                   ),
                 ),
+              );
+                },
               ),
           ],
         ),
