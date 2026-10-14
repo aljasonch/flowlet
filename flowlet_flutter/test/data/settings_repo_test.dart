@@ -41,15 +41,14 @@ void main() {
       expect(validateUsdIdrRate('--5'), 'Invalid rate');
     });
 
-    test('dot-decimal strings stay exact via Decimal', () {
-      expect(normalizeUsdIdrRate('15750.25'), '15750.25');
-      expect(normalizeUsdIdrRate('16200'), '16200');
-      expect(validateUsdIdrRate('15750.25'), isNull);
-    });
-
-    test('Indonesian comma decimals normalize to dot strings', () {
+    test('dots are always thousand separators, never decimal', () {
+      // Binding Indonesian convention (shared with Task-2 parseDecimalInput).
+      expect(normalizeUsdIdrRate('15.750'), '15750');
+      expect(normalizeUsdIdrRate('1.250.000'), '1250000');
       expect(normalizeUsdIdrRate('15.750,25'), '15750.25');
-      expect(normalizeUsdIdrRate('16200,5'), '16200.5');
+      // A dot is never a decimal point: 15750.25 reads as 1575025.
+      expect(normalizeUsdIdrRate('15750.25'), '1575025');
+      expect(normalizeUsdIdrRate('16200'), '16200');
       expect(validateUsdIdrRate('15.750,25'), isNull);
     });
   });
@@ -105,6 +104,53 @@ void main() {
       expect(await getMonthStartDay(fetcher: fetcher), 25);
       expect(await getUsdIdrRate(fetcher: fetcher), '16200');
     });
+
+    test('numeric rates arrive as String or int, never double', () async {
+      Future<Map?> intRate() async => {
+            'month_start_day': 1,
+            'currency': 'IDR',
+            'usd_idr_rate': 16200,
+            'usd_idr_rate_updated_at': null,
+          };
+      expect(await getUsdIdrRate(fetcher: intRate), '16200');
+
+      Future<Map?> stringRate() async => {
+            'month_start_day': 1,
+            'currency': 'IDR',
+            'usd_idr_rate': '15750.25',
+            'usd_idr_rate_updated_at': null,
+          };
+      expect(await getUsdIdrRate(fetcher: stringRate), '15750.25');
+
+      // A double is never on the happy path: it maps to null (unpriced)
+      // rather than leaking float imprecision into money handling.
+      Future<Map?> doubleRate() async => {
+            'month_start_day': 1,
+            'currency': 'IDR',
+            'usd_idr_rate': 16200.5,
+            'usd_idr_rate_updated_at': null,
+          };
+      expect(await getUsdIdrRate(fetcher: doubleRate), isNull);
+    });
+  });
+
+  group('formatRateUpdatedAt', () {
+    test('formats ISO timestamps as local YYYY-MM-DD HH:mm', () {
+      String two(int n) => n.toString().padLeft(2, '0');
+      final local = DateTime.parse('2026-10-14T12:00:00Z').toLocal();
+      expect(
+        formatRateUpdatedAt('2026-10-14T12:00:00Z'),
+        '${local.year}-${two(local.month)}-${two(local.day)} '
+        '${two(local.hour)}:${two(local.minute)}',
+      );
+    });
+
+    test('null, blank and garbage map to null', () {
+      expect(formatRateUpdatedAt(null), isNull);
+      expect(formatRateUpdatedAt(''), isNull);
+      expect(formatRateUpdatedAt('   '), isNull);
+      expect(formatRateUpdatedAt('not-a-date'), isNull);
+    });
   });
 
   group('writes delegate to injected callers', () {
@@ -125,7 +171,7 @@ void main() {
 
     test('setUsdIdrRate passes Decimal strings, never doubles', () async {
       Map<String, dynamic>? got;
-      await setUsdIdrRate('15750.25', update: (p) async => got = p);
+      await setUsdIdrRate('15.750,25', update: (p) async => got = p);
       expect(got?['usd_idr_rate'], '15750.25');
       expect(got?['usd_idr_rate_updated_at'], isNotNull);
     });

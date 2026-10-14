@@ -1,4 +1,5 @@
 import 'package:decimal/decimal.dart';
+import 'package:flowlet_flutter/core/parse.dart';
 import 'package:flowlet_flutter/core/supabase_client.dart';
 
 const duplicateNameMessage = 'That name already exists';
@@ -12,20 +13,28 @@ String? validateMonthStartDay(int day) {
 }
 
 /// Normalizes a USD-IDR rate input to a canonical decimal string.
-/// Blank/null means "clear the rate" and maps to null. Accepts both the
-/// dot-decimal form (`15750.25`) and the Indonesian comma form
-/// (`15.750,25`, dots ignored as thousand separators). Throws
-/// [FormatException] when unparseable. Decimal only, never double.
+/// Blank/null means "clear the rate" and maps to null. Indonesian
+/// convention (binding, shared with Task-2 [parseDecimalInput]): dots are
+/// ALWAYS thousand separators and are stripped (`15.750` -> `15750`,
+/// `1.250.000` -> `1250000`), comma is the decimal separator
+/// (`15.750,25` -> `15750.25`). A dot is never a decimal point, so
+/// `15750.25` reads as `1575025`. Throws [FormatException] when
+/// unparseable. Decimal only, never double.
 String? normalizeUsdIdrRate(String? raw) {
   if (raw == null) return null;
   final trimmed = raw.trim();
   if (trimmed.isEmpty) return null;
-  final normalized = trimmed.contains(',')
-      ? trimmed.replaceAll('.', '').replaceFirst(',', '.')
-      : trimmed;
-  final parsed = Decimal.tryParse(normalized);
+  var rest = trimmed;
+  var sign = '';
+  if (rest.startsWith('-') || rest.startsWith('+')) {
+    if (rest.startsWith('-')) sign = '-';
+    rest = rest.substring(1);
+  }
+  final parsed = parseDecimalInput(rest);
   if (parsed == null) throw const FormatException('Invalid rate');
-  return parsed.toString();
+  final normalized = Decimal.tryParse('$sign$parsed');
+  if (normalized == null) throw const FormatException('Invalid rate');
+  return normalized.toString();
 }
 
 /// Validates a rate input. Null/blank clears the rate. Returns an error
@@ -62,6 +71,22 @@ bool isDuplicateNameError(Object error) {
   }
 }
 
+/// Formats a stored `usd_idr_rate_updated_at` ISO timestamp for display
+/// as `YYYY-MM-DD HH:mm` in the device's local timezone. Returns null
+/// when the input is null, blank, or unparseable (callers hide the row).
+String? formatRateUpdatedAt(String? iso) {
+  if (iso == null || iso.trim().isEmpty) return null;
+  late final DateTime parsed;
+  try {
+    parsed = DateTime.parse(iso.trim()).toLocal();
+  } on FormatException {
+    return null;
+  }
+  String two(int n) => n.toString().padLeft(2, '0');
+  return '${parsed.year}-${two(parsed.month)}-${two(parsed.day)} '
+      '${two(parsed.hour)}:${two(parsed.minute)}';
+}
+
 class SettingsProfile {
   final int monthStartDay;
   final String currency;
@@ -75,13 +100,13 @@ class SettingsProfile {
     required this.rateUpdatedAt,
   });
 
-  /// Rate stays a verbatim decimal string; ints stringify exactly and
-  /// doubles go through Decimal so exponent forms normalize without
-  /// float math.
+  /// Rate stays a verbatim decimal string. PostgREST returns Postgres
+  /// `numeric` as a JSON string (or, unquoted, as an int); a double is
+  /// never on the happy path and maps to null so float imprecision can
+  /// never leak into money handling.
   static String? _rateString(dynamic v) {
     if (v == null) return null;
     if (v is int) return v.toString();
-    if (v is double) return Decimal.tryParse(v.toString())?.toString();
     if (v is String) {
       final s = v.trim();
       return s.isEmpty ? null : s;

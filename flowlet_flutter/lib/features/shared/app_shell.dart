@@ -37,15 +37,6 @@ class DebtsPlaceholder extends StatelessWidget {
   }
 }
 
-class SettingsPlaceholder extends StatelessWidget {
-  const SettingsPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Settings'));
-  }
-}
-
 class _Destination {
   const _Destination(this.path, this.label, this.icon);
   final String path;

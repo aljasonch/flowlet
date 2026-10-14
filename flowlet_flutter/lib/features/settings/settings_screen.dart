@@ -49,12 +49,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final _rate = TextEditingController();
   final _newCategory = TextEditingController();
   final _newSource = TextEditingController();
-  final _rename = TextEditingController();
+  final _renameCat = TextEditingController();
+  final _renameSrc = TextEditingController();
 
   String? _monthError;
   String? _rateError;
   String? _categoryError;
   String? _sourceError;
+  String? _renameError;
   bool _savingMonth = false;
   bool _savingRate = false;
 
@@ -83,7 +85,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _rate.dispose();
     _newCategory.dispose();
     _newSource.dispose();
-    _rename.dispose();
+    _renameCat.dispose();
+    _renameSrc.dispose();
     super.dispose();
   }
 
@@ -136,7 +139,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _sources = results[1];
       });
     } catch (_) {
-      // Keep existing lists; the inline error already explains failures.
+      if (!mounted) return;
+      _snack('Could not reload. Try again.');
     }
   }
 
@@ -274,21 +278,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _renameCategory(String id) async {
-    final error = validateRefName(_rename.text);
+    final error = validateRefName(_renameCat.text);
     if (error != null) {
-      setState(() => _categoryError = error);
+      setState(() => _renameError = error);
       return;
     }
     try {
       if (widget.renameCategoryFn != null) {
-        await widget.renameCategoryFn!(id, _rename.text.trim());
+        await widget.renameCategoryFn!(id, _renameCat.text.trim());
       } else {
-        await renameCategory(id, _rename.text.trim());
+        await renameCategory(id, _renameCat.text.trim());
       }
       if (!mounted) return;
       setState(() {
         _editingCatId = null;
-        _categoryError = null;
+        _renameError = null;
       });
       await _reloadLists();
       _snack('Category renamed');
@@ -299,11 +303,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (isNotSignedInError(e)) {
         _redirectToLogin();
       } else {
-        setState(() => _categoryError = _friendlyError(e));
+        setState(() => _renameError = _friendlyError(e));
       }
     } catch (e) {
       if (!mounted) return;
-      setState(() => _categoryError = _friendlyError(e));
+      setState(() => _renameError = _friendlyError(e));
     }
   }
 
@@ -364,21 +368,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _renameSource(String id) async {
-    final error = validateRefName(_rename.text);
+    final error = validateRefName(_renameSrc.text);
     if (error != null) {
-      setState(() => _sourceError = error);
+      setState(() => _renameError = error);
       return;
     }
     try {
       if (widget.renameSourceFn != null) {
-        await widget.renameSourceFn!(id, _rename.text.trim());
+        await widget.renameSourceFn!(id, _renameSrc.text.trim());
       } else {
-        await renameIncomeSource(id, _rename.text.trim());
+        await renameIncomeSource(id, _renameSrc.text.trim());
       }
       if (!mounted) return;
       setState(() {
         _editingSourceId = null;
-        _sourceError = null;
+        _renameError = null;
       });
       await _reloadLists();
       _snack('Income source renamed');
@@ -389,11 +393,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (isNotSignedInError(e)) {
         _redirectToLogin();
       } else {
-        setState(() => _sourceError = _friendlyError(e));
+        setState(() => _renameError = _friendlyError(e));
       }
     } catch (e) {
       if (!mounted) return;
-      setState(() => _sourceError = _friendlyError(e));
+      setState(() => _renameError = _friendlyError(e));
     }
   }
 
@@ -427,6 +431,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final archivedCats = _categories.where((c) => c.isArchived).toList();
     final activeSources = _sources.where((s) => !s.isArchived).toList();
     final archivedSources = _sources.where((s) => s.isArchived).toList();
+    final rateUpdatedLabel = formatRateUpdatedAt(_rateUpdatedAt);
 
     return RefreshIndicator(
       onRefresh: _load,
@@ -534,11 +539,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         errorText: _rateError,
                       ),
                     ),
-                    if (_rateUpdatedAt != null && _rateUpdatedAt!.isNotEmpty)
+                    if (rateUpdatedLabel != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
-                          'Last updated: $_rateUpdatedAt',
+                          'Last updated: $rateUpdatedLabel',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
@@ -576,14 +581,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               error: _categoryError,
               newController: _newCategory,
               editingId: _editingCatId,
-              renameController: _rename,
+              renameController: _renameCat,
+              renameError: _editingCatId == null ? null : _renameError,
               onAdd: _addCategory,
               onStartRename: (ref) => setState(() {
                 _editingCatId = ref.id;
-                _rename.text = ref.name;
-                _categoryError = null;
+                _editingSourceId = null;
+                _renameCat.text = ref.name;
+                _renameError = null;
               }),
-              onCancelRename: () => setState(() => _editingCatId = null),
+              onCancelRename: () => setState(() {
+                _editingCatId = null;
+                _renameError = null;
+              }),
               onRename: _renameCategory,
               onToggleArchive: _toggleArchiveCategory,
             ),
@@ -599,14 +609,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               error: _sourceError,
               newController: _newSource,
               editingId: _editingSourceId,
-              renameController: _rename,
+              renameController: _renameSrc,
+              renameError: _editingSourceId == null ? null : _renameError,
               onAdd: _addSource,
               onStartRename: (ref) => setState(() {
                 _editingSourceId = ref.id;
-                _rename.text = ref.name;
-                _sourceError = null;
+                _editingCatId = null;
+                _renameSrc.text = ref.name;
+                _renameError = null;
               }),
-              onCancelRename: () => setState(() => _editingSourceId = null),
+              onCancelRename: () => setState(() {
+                _editingSourceId = null;
+                _renameError = null;
+              }),
               onRename: _renameSource,
               onToggleArchive: _toggleArchiveSource,
             ),
@@ -630,6 +645,7 @@ class _RefSection extends StatelessWidget {
     required this.newController,
     required this.editingId,
     required this.renameController,
+    required this.renameError,
     required this.onAdd,
     required this.onStartRename,
     required this.onCancelRename,
@@ -648,6 +664,7 @@ class _RefSection extends StatelessWidget {
   final TextEditingController newController;
   final String? editingId;
   final TextEditingController renameController;
+  final String? renameError;
   final VoidCallback onAdd;
   final void Function(NamedRef ref) onStartRename;
   final VoidCallback onCancelRename;
@@ -707,7 +724,8 @@ class _RefSection extends StatelessWidget {
                               controller: renameController,
                               maxLength: 50,
                               autofocus: true,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                errorText: renameError,
                                 counterText: '',
                               ),
                             ),

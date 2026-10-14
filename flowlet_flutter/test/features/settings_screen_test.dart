@@ -24,21 +24,31 @@ Future<void> _pump(
   WidgetTester tester, {
   Future<void> Function(int day)? saveMonthFn,
   Future<void> Function(String name)? addCategoryFn,
+  Future<void> Function(String id, String name)? renameCategoryFn,
+  Future<List<NamedRef>> Function()? categoriesFn,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(
         body: SettingsScreen(
           profileFn: () async => _profile,
-          categoriesFn: () async => _categories,
+          categoriesFn: categoriesFn ?? () async => _categories,
           sourcesFn: () async => _sources,
           saveMonthFn: saveMonthFn,
           addCategoryFn: addCategoryFn,
+          renameCategoryFn: renameCategoryFn,
         ),
       ),
     ),
   );
   await tester.pumpAndSettle();
+}
+
+String _expectedUpdatedLabel(String iso) {
+  String two(int n) => n.toString().padLeft(2, '0');
+  final local = DateTime.parse(iso).toLocal();
+  return 'Last updated: ${local.year}-${two(local.month)}-${two(local.day)} '
+      '${two(local.hour)}:${two(local.minute)}';
 }
 
 void main() {
@@ -62,13 +72,15 @@ void main() {
         findsOneWidget);
     expect(find.byKey(const ValueKey('settings-archived-sources')),
         findsOneWidget);
-    // Prefilled from the profile, rate kept as an exact decimal string.
+    // Prefilled from the profile, rate kept as an exact decimal string,
+    // updated-at formatted as local YYYY-MM-DD HH:mm (never raw ISO).
     expect(find.text('25'), findsOneWidget);
     expect(find.text('15750.25'), findsOneWidget);
     expect(
-      find.text('Last updated: 2026-10-14T00:00:00Z'),
+      find.text(_expectedUpdatedLabel('2026-10-14T00:00:00Z')),
       findsOneWidget,
     );
+    expect(find.text('Last updated: 2026-10-14T00:00:00Z'), findsNothing);
   });
 
   testWidgets('out-of-range month start shows the validation error',
@@ -105,5 +117,55 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('That name already exists'), findsOneWidget);
+  });
+
+  testWidgets('rename errors surface on the editing row, not the add field',
+      (tester) async {
+    await _pump(
+      tester,
+      renameCategoryFn: (_, __) async =>
+          throw StateError('That name already exists'),
+    );
+
+    await tester.drag(find.byType(ListView), const Offset(0, -2000));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Rename Food'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('rename-c1')),
+      'Bills',
+    );
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('rename-c1')),
+        matching: find.text('That name already exists'),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('list reload failure surfaces a snackbar', (tester) async {
+    var calls = 0;
+    await _pump(
+      tester,
+      addCategoryFn: (_) async {},
+      categoriesFn: () async {
+        calls++;
+        if (calls > 1) throw Exception('reload failed');
+        return _categories;
+      },
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey('settings-category-name')),
+      'Bills',
+    );
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Could not reload. Try again.'), findsOneWidget);
   });
 }
