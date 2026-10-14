@@ -76,10 +76,10 @@ void main() {
         findsWidgets);
     expect(find.text('BTC'), findsOneWidget);
     expect(find.textContaining('Allocation by asset type'), findsOneWidget);
-    expect(
-        find.text(
-            'Prices may be delayed or inaccurate. This is not financial advice.'),
-        findsOneWidget);
+    final disclaimer = find.text(
+        'Prices may be delayed or inaccurate. This is not financial advice.');
+    await tester.scrollUntilVisible(disclaimer, 200);
+    expect(disclaimer, findsOneWidget);
   });
 
   testWidgets('shows USD-rate banner when USD holding has no rate',
@@ -153,18 +153,39 @@ void main() {
     expect(safeDatePrefix('   '), '');
   });
 
-  testWidgets('privacy mode masks avg and price but keeps quantity visible',
-      (tester) async {
+  testWidgets('privacy mode masks quantity, avg and price', (tester) async {
     privacyMode.value = true;
     addTearDown(() => privacyMode.value = false);
     await tester.pumpWidget(_screen());
     await tester.pumpAndSettle();
-    expect(find.textContaining('Qty: 0.0054'), findsWidgets);
+    expect(find.textContaining('Qty: \u2022\u2022\u2022\u2022\u2022\u2022'),
+        findsOneWidget);
     expect(find.textContaining('Avg: \u2022\u2022\u2022\u2022\u2022\u2022'),
         findsOneWidget);
     expect(find.textContaining('Px: \u2022\u2022\u2022\u2022\u2022\u2022'),
         findsOneWidget);
+    expect(find.textContaining('0.0054'), findsNothing);
     expect(find.textContaining('950000000'), findsNothing);
+  });
+
+  testWidgets('quantity visible when privacy mode off', (tester) async {
+    privacyMode.value = false;
+    await tester.pumpWidget(_screen());
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Qty: 0.0054'), findsWidgets);
+  });
+
+  testWidgets('summary gain shows percent, masked in privacy mode',
+      (tester) async {
+    await tester.pumpWidget(_screen());
+    await tester.pumpAndSettle();
+    expect(find.textContaining('+10.53%', findRichText: true), findsWidgets);
+    privacyMode.value = true;
+    addTearDown(() => privacyMode.value = false);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('10.53', findRichText: true), findsNothing);
+    expect(find.textContaining('\u2022\u2022\u2022\u2022\u2022\u2022',
+        findRichText: true), findsWidgets);
   });
 
   testWidgets('edit dialog prefills provider ref fetched from holding row',

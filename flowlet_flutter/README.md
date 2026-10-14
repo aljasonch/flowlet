@@ -60,9 +60,19 @@ strings (`decimal` package); valuation math stays in SQL.
 
 The client never holds secrets: only the Supabase URL and anon key are
 compiled in. The CoinGecko key and the Supabase `service_role` key must
-never appear in this codebase. `test/key_leak_test.dart` scans every file
-under `lib/` and fails the suite if `service_role` or `COINGECKO_API_KEY`
+never appear in this codebase. `test/key_leak_test.dart` scans every Dart
+file under `lib/` and fails the suite if `service_role` or `COINGECKO_API_KEY`
 shows up in client source.
+
+## Routes
+
+- `/login`, `/`, `/transactions`, `/transactions/new`,
+  `/transactions/:id/edit`, `/portfolio`, `/debts`, `/settings`.
+- Deviation from the web spec routing table: portfolio create/edit have no
+  `/portfolio/new` or `/portfolio/:id/edit` routes. Holding add/edit is a
+  dialog on `/portfolio` instead (mobile dialog pattern: the form is short,
+  keeps the holdings list visible underneath, and avoids a full-screen push
+  for a quick edit).
 
 ## Price refresh endpoint
 

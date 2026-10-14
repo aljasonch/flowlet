@@ -46,3 +46,8 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Env files (keys are compile-time --dart-define flags, never committed)
+.env
+.env.*
+!.env.example

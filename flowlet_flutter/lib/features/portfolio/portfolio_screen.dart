@@ -504,9 +504,10 @@ class _SummaryCards extends StatelessWidget {
       valueListenable: privacyMode,
       builder: (context, hidden, _) {
         String money(int v) => hidden ? _masked : formatIDR(v);
+        final pct = overallGainPct(summary);
         final gainText = hidden
             ? _maskedShort
-            : '${sign > 0 ? '+' : ''}${formatIDR(summary.totalGainIdr)}';
+            : '${sign > 0 ? '+' : ''}${formatIDR(summary.totalGainIdr)}${pct == null ? '' : ' ($pct)'}';
         return LayoutBuilder(
           builder: (context, constraints) {
             final wide = constraints.maxWidth >= 600;
@@ -759,7 +760,7 @@ class HoldingTile extends StatelessWidget {
                   ? ''
                   : ' • Px: ${hidden ? _maskedShort : _safePrice(h.currentPrice!, h.priceCurrency)}';
               return Text(
-                '${h.name} • Qty: ${_safeQuantity(h.quantity)} • Avg: $avg$px',
+                '${h.name} • Qty: ${hidden ? _maskedShort : _safeQuantity(h.quantity)} • Avg: $avg$px',
                 style: const TextStyle(
                     fontFeatures: [FontFeature.tabularFigures()]),
               );

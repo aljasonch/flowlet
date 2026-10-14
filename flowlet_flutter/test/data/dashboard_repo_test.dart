@@ -142,6 +142,24 @@ void main() {
     expect(trend.first.expense, 0);
   });
 
+  test('month_summary parses fractional and large bigint Strings without double',
+      () async {
+    Future<dynamic> fake(String f, {Map<String, dynamic>? params}) async {
+      return [
+        {
+          'total_income': '25000.9',
+          'total_expense': '9999999999999',
+          'net': '25000.9',
+        },
+      ];
+    }
+
+    final s = await fetchMonthSummary(2026, 10, rpc: fake);
+    expect(s.income, 25000);
+    expect(s.expense, 9999999999999);
+    expect(s.net, 25000);
+  });
+
   test('dashboard RPC contract names', () {    const rpcs = [
       'month_summary',
       'spending_by_category',

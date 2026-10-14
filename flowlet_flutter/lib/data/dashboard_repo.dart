@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:flowlet_flutter/core/supabase_client.dart';
 
 class MonthSummary {
@@ -43,7 +44,7 @@ int _asInt(dynamic v) {
   if (v is num) return v.toInt();
   if (v is String) {
     final s = v.trim();
-    return int.tryParse(s) ?? double.tryParse(s)?.toInt() ?? 0;
+    return int.tryParse(s) ?? Decimal.tryParse(s)?.toBigInt().toInt() ?? 0;
   }
   return 0;
 }
