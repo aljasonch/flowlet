@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flowlet_flutter/features/auth/login_screen.dart';
 import 'package:flowlet_flutter/features/dashboard/dashboard_screen.dart';
 import 'package:flowlet_flutter/features/shared/app_shell.dart';
+import 'package:flowlet_flutter/features/portfolio/portfolio_screen.dart';
 import 'package:flowlet_flutter/features/transactions/tx_form_screen.dart';
 import 'package:flowlet_flutter/features/transactions/tx_list_screen.dart';
 
@@ -38,7 +39,7 @@ GoRouter buildRouter() {
               ),
             ],
           ),
-          GoRoute(path: '/portfolio', builder: (c, s) => const PortfolioPlaceholder()),
+          GoRoute(path: '/portfolio', builder: (c, s) => const PortfolioScreen()),
           GoRoute(path: '/debts', builder: (c, s) => const DebtsPlaceholder()),
           GoRoute(path: '/settings', builder: (c, s) => const SettingsPlaceholder()),
         ],
