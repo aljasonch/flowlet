@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flowlet_flutter/features/auth/login_screen.dart';
+import 'package:flowlet_flutter/features/dashboard/dashboard_screen.dart';
 import 'package:flowlet_flutter/features/shared/app_shell.dart';
 
 GoRouter buildRouter() {
@@ -18,7 +19,7 @@ GoRouter buildRouter() {
       ShellRoute(
         builder: (c, s, child) => AppShell(child: child),
         routes: [
-          GoRoute(path: '/', builder: (c, s) => const DashboardPlaceholder()),
+          GoRoute(path: '/', builder: (c, s) => const DashboardScreen()),
           GoRoute(path: '/transactions', builder: (c, s) => const TxPlaceholder()),
           GoRoute(path: '/portfolio', builder: (c, s) => const PortfolioPlaceholder()),
           GoRoute(path: '/debts', builder: (c, s) => const DebtsPlaceholder()),
