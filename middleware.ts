@@ -8,11 +8,15 @@ export async function middleware(request: NextRequest) {
   });
 
   const isLoginPage = request.nextUrl.pathname.startsWith("/login");
+  const isApiRoute = request.nextUrl.pathname.startsWith("/api/");
   const isPublicAsset =
     request.nextUrl.pathname.startsWith("/_next") ||
     request.nextUrl.pathname.startsWith("/favicon.ico");
 
-  if (isPublicAsset) {
+  // API routes authenticate themselves (cookie session or Authorization:
+  // Bearer JWT) and return JSON statuses. Never redirect them to /login:
+  // that breaks non-browser clients and CORS preflights.
+  if (isPublicAsset || isApiRoute) {
     return supabaseResponse;
   }
 

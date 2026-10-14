@@ -7,6 +7,28 @@ import { coingecko } from "@/lib/prices/coingecko";
 import { fetchLiveUsdIdrRate } from "@/lib/prices/fx";
 import type { PriceCurrency, Quote } from "@/lib/prices/types";
 
+// Cross-origin calls (e.g. Flutter web dev) send an OPTIONS preflight and
+// require explicit headers. The endpoint stays safe to expose: it needs the
+// caller's own user JWT and never accepts cookies or shared secrets.
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Authorization, Content-Type",
+};
+
+function json(
+  body: unknown,
+  init?: { status?: number; headers?: Record<string, string> }
+) {
+  return NextResponse.json(body, {
+    ...init,
+    headers: { ...corsHeaders, ...init?.headers },
+  });
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
+}
 // Client for non-browser callers (e.g. the Flutter app) that authenticate
 // with an Authorization: Bearer <user-jwt> header instead of cookies.
 // Uses the anon key only; the JWT is verified by supabase.auth.getUser()
@@ -29,7 +51,7 @@ export async function POST(req: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return json({ error: "Unauthorized" }, { status: 401 });
   }
 
   // 1. Fetch user's CoinGecko holdings and check for USD holdings
@@ -48,7 +70,7 @@ export async function POST(req: NextRequest) {
     ]);
 
   if (holdingsErr) {
-    return NextResponse.json(
+    return json(
       { refreshed: false, reason: "db_error", message: holdingsErr.message },
       { status: 500 }
     );
@@ -77,7 +99,7 @@ export async function POST(req: NextRequest) {
       revalidatePath("/portfolio");
       revalidatePath("/");
     }
-    return NextResponse.json({
+    return json({
       refreshed: true,
       updated: 0,
       failed: [],
@@ -99,7 +121,7 @@ export async function POST(req: NextRequest) {
   if (newestQuote?.fetched_at) {
     const elapsed = Date.now() - new Date(newestQuote.fetched_at).getTime();
     if (elapsed < 60_000) {
-      return NextResponse.json({
+      return json({
         refreshed: false,
         reason: "throttled",
       });
@@ -147,7 +169,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("CoinGecko provider error:", err);
     // Keep existing quotes untouched on provider failure
-    return NextResponse.json({
+    return json({
       refreshed: false,
       reason: "provider_error",
     });
@@ -171,7 +193,7 @@ export async function POST(req: NextRequest) {
       });
 
     if (upsertErr) {
-      return NextResponse.json(
+      return json(
         { refreshed: false, reason: "db_error", message: upsertErr.message },
         { status: 500 }
       );
@@ -181,7 +203,7 @@ export async function POST(req: NextRequest) {
   revalidatePath("/portfolio");
   revalidatePath("/");
 
-  return NextResponse.json({
+  return json({
     refreshed: true,
     updated: allQuotes.length,
     failed,
