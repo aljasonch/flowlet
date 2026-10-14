@@ -27,3 +27,9 @@ Done. Commit `f86050f` on branch `feat/flutter-port`.
 - Tests: 3 new repo tests (bigint-as-String summary, null-to-0 summary, String/null across category/source/trend); new `test/features/dashboard_screen_test.dart` (trendLabel M/yy incl. year boundary; widget tests for masked-hidden and labeled-visible trend states).
 - Verification: `flutter test test/data/dashboard_repo_test.dart test/features/dashboard_screen_test.dart` — 11/11 passed. `flutter analyze` — no issues found.
 - Commit: `4d0c324 fix(flutter): harden dashboard totals parsing, trend labels, privacy masking` (files: dashboard_repo.dart, dashboard_screen.dart, dashboard_repo_test.dart, dashboard_screen_test.dart).
+
+## Fix round 2 (2026-10-14)
+- `lib/features/dashboard/dashboard_screen.dart`: `_SpendingCard` renamed to public `SpendingCard` (plus `super.key`, mirroring round-1 `TrendCard` change) and its `BarChart` wrapped in a `ValueListenableBuilder` on `privacyMode` — hidden renders the same 200px masked placeholder (`Rp ••••••`) instead of real bar heights; legend-row masking unchanged. Reuses existing `_masked` constant, no new patterns.
+- Tests: 2 new widget tests in `test/features/dashboard_screen_test.dart` (spending hidden renders masked placeholder, no real bars; spending visible renders category rows with no mask).
+- Verification: `flutter test test/data/dashboard_repo_test.dart test/features/dashboard_screen_test.dart` — 13/13 passed. `flutter analyze` — no issues found.
+- Commit: `PENDING fix(flutter): mask spending bar chart when privacy hidden` (files: dashboard_screen.dart, dashboard_screen_test.dart).

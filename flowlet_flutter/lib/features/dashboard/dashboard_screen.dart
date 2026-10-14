@@ -179,7 +179,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             _SummaryCards(summary: _summary),
             const SizedBox(height: 16),
-            _SpendingCard(cats: _cats),
+            SpendingCard(cats: _cats),
             const SizedBox(height: 16),
             _IncomeCard(srcs: _srcs),
             const SizedBox(height: 16),
@@ -308,8 +308,8 @@ class _Stat extends StatelessWidget {
   }
 }
 
-class _SpendingCard extends StatelessWidget {
-  const _SpendingCard({required this.cats});
+class SpendingCard extends StatelessWidget {
+  const SpendingCard({super.key, required this.cats});
   final List<CatSpend> cats;
 
   @override
@@ -326,7 +326,16 @@ class _SpendingCard extends StatelessWidget {
             if (cats.isEmpty)
               const Text('No spending this period.')
             else
-              SizedBox(
+              ValueListenableBuilder<bool>(
+                valueListenable: privacyMode,
+                builder: (context, hidden, _) {
+                  if (hidden) {
+                    return const SizedBox(
+                      height: 200,
+                      child: Center(child: Text('Rp ••••••')),
+                    );
+                  }
+                  return SizedBox(
                 height: 200,
                 child: BarChart(
                   BarChartData(
@@ -378,6 +387,8 @@ class _SpendingCard extends StatelessWidget {
                     ],
                   ),
                 ),
+              );
+                },
               ),
             const SizedBox(height: 8),
             for (var i = 0; i < cats.length; i++)

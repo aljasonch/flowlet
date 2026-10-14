@@ -53,4 +53,44 @@ void main() {
     expect(find.text('1/27'), findsOneWidget);
     expect(find.text('Rp ••••••'), findsNothing);
   });
+
+  testWidgets('spending chart renders masked placeholder when privacy hidden',
+      (tester) async {
+    privacyMode.value = true;
+    addTearDown(() => privacyMode.value = false);
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: SpendingCard(
+            cats: [CatSpend('id', 'Food', 2500000)],
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // One masked chart placeholder plus one masked legend row.
+    expect(find.text('Rp ••••••'), findsNWidgets(2));
+    expect(find.text('Food'), findsWidgets);
+  });
+
+  testWidgets('spending chart renders bars when privacy visible',
+      (tester) async {
+    privacyMode.value = false;
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: SpendingCard(
+            cats: [CatSpend('id', 'Food', 2500000)],
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('Rp ••••••'), findsNothing);
+    expect(find.text('Food'), findsWidgets);
+  });
 }
