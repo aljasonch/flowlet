@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flowlet_flutter/core/format.dart';
 import 'package:flowlet_flutter/core/period.dart';
 import 'package:flowlet_flutter/core/privacy.dart';
@@ -119,7 +120,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final hasData = _summary.income > 0 ||
         _summary.expense > 0 ||
         _cats.isNotEmpty ||
-        _srcs.isNotEmpty;
+        _srcs.isNotEmpty ||
+        _trend.isNotEmpty;
 
     return RefreshIndicator(
       onRefresh: _load,
@@ -332,7 +334,7 @@ class SpendingCard extends StatelessWidget {
                   if (hidden) {
                     return const SizedBox(
                       height: 200,
-                      child: Center(child: Text('Rp ••••••')),
+                      child: Center(child: Text(_masked)),
                     );
                   }
                   return SizedBox(
@@ -487,7 +489,7 @@ class TrendCard extends StatelessWidget {
                   if (hidden) {
                     return const SizedBox(
                       height: 200,
-                      child: Center(child: Text('Rp ••••••')),
+                      child: Center(child: Text(_masked)),
                     );
                   }
                   return SizedBox(

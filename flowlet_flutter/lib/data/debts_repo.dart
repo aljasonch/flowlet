@@ -1,6 +1,11 @@
 import 'package:flowlet_flutter/core/parse.dart';
 import 'package:flowlet_flutter/core/supabase_client.dart';
 
+/// Centralized in [core/auth_errors.dart]; re-exported here so existing
+/// imports keep working.
+export 'package:flowlet_flutter/core/auth_errors.dart'
+    show isNotSignedInError;
+
 final _dateRegex = RegExp(r'^\d{4}-\d{2}-\d{2}$');
 
 bool _isLeapYear(int year) =>
@@ -272,11 +277,6 @@ String _uid() {
   if (id == null) throw StateError('Not signed in');
   return id;
 }
-
-/// True for the signed-out error thrown by [_uid]. Screens map this to a
-/// login redirect alongside AuthException.
-bool isNotSignedInError(Object error) =>
-    error is StateError && error.message.contains('Not signed in');
 
 Future<dynamic> _defaultRpc(String fn, {Map<String, dynamic>? params}) {
   return db.rpc(fn, params: params);

@@ -1,42 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class DashboardPlaceholder extends StatelessWidget {
-  const DashboardPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Dashboard'));
-  }
-}
-
-class TxPlaceholder extends StatelessWidget {
-  const TxPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Transactions'));
-  }
-}
-
-class PortfolioPlaceholder extends StatelessWidget {
-  const PortfolioPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Portfolio'));
-  }
-}
-
-class DebtsPlaceholder extends StatelessWidget {
-  const DebtsPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Debts'));
-  }
-}
-
 class _Destination {
   const _Destination(this.path, this.label, this.icon);
   final String path;
@@ -55,8 +19,7 @@ const _destinations = [
 int _indexForLocation(String location) {
   for (var i = _destinations.length - 1; i >= 1; i--) {
     if (location == _destinations[i].path ||
-        location.startsWith('${_destinations[i].path}/') ||
-        location.startsWith('${_destinations[i].path}?')) {
+        location.startsWith('${_destinations[i].path}/')) {
       return i;
     }
   }

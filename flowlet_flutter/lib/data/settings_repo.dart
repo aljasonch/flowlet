@@ -2,6 +2,11 @@ import 'package:decimal/decimal.dart';
 import 'package:flowlet_flutter/core/parse.dart';
 import 'package:flowlet_flutter/core/supabase_client.dart';
 
+/// Centralized in [core/auth_errors.dart]; re-exported here so existing
+/// imports keep working.
+export 'package:flowlet_flutter/core/auth_errors.dart'
+    show isNotSignedInError;
+
 const duplicateNameMessage = 'That name already exists';
 
 /// Month start day is an int in 1..31. Returns an error, or null when valid.
@@ -169,11 +174,6 @@ String _uid() {
   if (id == null) throw StateError('Not signed in');
   return id;
 }
-
-/// True for the signed-out error thrown by [_uid]. Screens map this to a
-/// login redirect alongside AuthException.
-bool isNotSignedInError(Object error) =>
-    error is StateError && error.message.contains('Not signed in');
 
 Future<Map?> _defaultProfileFetcher() {
   return db
