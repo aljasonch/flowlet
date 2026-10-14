@@ -15,8 +15,10 @@ import 'package:flowlet_flutter/features/transactions/tx_list_screen.dart';
 /// Notifies the router on Supabase auth changes so post-login redirects
 /// fire without manual navigation. The subscription is lazy: [ensureSubscribed]
 /// runs on the first redirect evaluation, so constructing the router never
-/// touches `Supabase.instance` (tests and key-less boots stay crash-free).
-/// Pass [events] in tests to avoid the real auth stream.
+/// touches `Supabase.instance` (tests stay crash-free). Redirect evaluation
+/// itself guards every `Supabase.instance` read, so a key-less boot (see
+/// lib/main.dart when the defines are absent) lands on the login screen
+/// instead of throwing. Pass [events] in tests to avoid the real auth stream.
 class SupabaseAuthListenable extends ChangeNotifier {
   SupabaseAuthListenable({this._events});
 
@@ -29,8 +31,15 @@ class SupabaseAuthListenable extends ChangeNotifier {
 
   void ensureSubscribed() {
     if (_subscribed) return;
+    final Stream<dynamic> stream;
+    try {
+      stream = _events ?? Supabase.instance.client.auth.onAuthStateChange;
+    } catch (_) {
+      // Supabase never initialized (key-less boot): stay unsubscribed so a
+      // later call retries, and let the redirect treat the session as null.
+      return;
+    }
     _subscribed = true;
-    final stream = _events ?? Supabase.instance.client.auth.onAuthStateChange;
     _sub = stream.listen((_) => notifyListeners());
   }
 
@@ -41,6 +50,11 @@ class SupabaseAuthListenable extends ChangeNotifier {
   }
 }
 
+/// Builds the app router. When [refreshListenable] is omitted, an internal
+/// [SupabaseAuthListenable] is created and owned by the returned router for
+/// app lifetime: go_router removes its listener on dispose but never disposes
+/// an injected listenable, and v1 uses a single app-lifetime router, so no
+/// dispose hook is needed (multi-router test harnesses dispose their own).
 GoRouter buildRouter({Listenable? refreshListenable}) {
   final authRefresh =
       refreshListenable == null ? SupabaseAuthListenable() : null;
@@ -49,7 +63,14 @@ GoRouter buildRouter({Listenable? refreshListenable}) {
     refreshListenable: refreshListenable ?? authRefresh,
     redirect: (context, state) {
       authRefresh?.ensureSubscribed();
-      final session = Supabase.instance.client.auth.currentSession;
+      Session? session;
+      try {
+        session = Supabase.instance.client.auth.currentSession;
+      } catch (_) {
+        // Supabase never initialized (key-less boot): no session, so the
+        // rules below send the user to the login screen.
+        session = null;
+      }
       final loggingIn = state.matchedLocation == '/login';
       if (session == null && !loggingIn) return '/login';
       if (session != null && loggingIn) return '/';

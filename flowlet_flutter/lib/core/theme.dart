@@ -24,6 +24,9 @@ ThemeData _base(Brightness b) {
     ),
     inputDecorationTheme: const InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: _controlRadius),
+      enabledBorder: OutlineInputBorder(borderRadius: _controlRadius),
+      focusedBorder: OutlineInputBorder(borderRadius: _controlRadius),
+      errorBorder: OutlineInputBorder(borderRadius: _controlRadius),
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(shape: controlShape),
@@ -33,6 +36,9 @@ ThemeData _base(Brightness b) {
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(shape: controlShape),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(shape: controlShape),
     ),
   );
 }

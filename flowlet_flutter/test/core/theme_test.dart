@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flowlet_flutter/core/theme.dart';
 
@@ -27,13 +27,20 @@ void main() {
   testWidgets('inputs and buttons use the 10px control radius',
       (tester) async {
     for (final theme in [buildLightTheme(), buildDarkTheme()]) {
-      final inputBorder =
-          theme.inputDecorationTheme.border as OutlineInputBorder;
-      expect(inputBorder.borderRadius, _controlRadius);
+      final inputBorders = [
+        theme.inputDecorationTheme.border,
+        theme.inputDecorationTheme.enabledBorder,
+        theme.inputDecorationTheme.focusedBorder,
+        theme.inputDecorationTheme.errorBorder,
+      ];
+      for (final border in inputBorders) {
+        expect((border as OutlineInputBorder).borderRadius, _controlRadius);
+      }
       final buttonStyles = [
         theme.filledButtonTheme.style,
         theme.elevatedButtonTheme.style,
         theme.outlinedButtonTheme.style,
+        theme.textButtonTheme.style,
       ];
       for (final style in buttonStyles) {
         final shape =

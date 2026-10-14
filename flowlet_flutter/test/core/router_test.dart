@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flowlet_flutter/core/router.dart';
+import 'package:flowlet_flutter/features/auth/login_screen.dart';
+import 'package:flowlet_flutter/main.dart';
 
 void main() {
   test('auth listenable notifies on auth events', () async {
@@ -36,5 +39,15 @@ void main() {
     final router = buildRouter(refreshListenable: ChangeNotifier());
     expect(router, isNotNull);
     router.dispose();
+  });
+
+  testWidgets('key-less boot lands on login without throwing', (tester) async {
+    // No Supabase.initialize: mirrors lib/main.dart when the SUPABASE_URL /
+    // SUPABASE_ANON_KEY defines are absent. Router construction plus redirect
+    // evaluation must not touch Supabase.instance in a throwing way.
+    await tester.pumpWidget(const FlowletApp());
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.byType(LoginScreen), findsOneWidget);
   });
 }
