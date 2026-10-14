@@ -209,17 +209,17 @@ class DebtRecord {
 
   factory DebtRecord.fromRow(Map row) {
     return DebtRecord(
-      id: '${row['id']}',
-      type: '${row['type']}',
-      personName: '${row['person_name']}',
+      id: row['id'] as String? ?? '',
+      type: row['type'] as String? ?? '',
+      personName: row['person_name'] as String? ?? '',
       amount: _asInt(row['amount']),
-      date: '${row['date']}',
+      date: row['date'] as String? ?? '',
       dueDate: row['due_date'] as String?,
       note: row['note'] as String?,
       createdAt: row['created_at'] as String?,
       paidAmount: _asInt(row['paid_amount']),
       remainingAmount: _asInt(row['remaining_amount']),
-      status: '${row['status']}',
+      status: row['status'] as String? ?? '',
       isOverdue: row['is_overdue'] == true,
     );
   }

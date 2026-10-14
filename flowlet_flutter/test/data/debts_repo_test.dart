@@ -553,4 +553,34 @@ void main() {
       expect(isNotSignedInError(ArgumentError('x')), isFalse);
     });
   });
+
+  group('DebtRecord.fromRow', () {
+    test('null string fields fall back to empty, never the "null" string', () {
+      final record = DebtRecord.fromRow({
+        'id': null,
+        'type': null,
+        'person_name': null,
+        'amount': '100000',
+        'date': null,
+        'due_date': null,
+        'note': null,
+        'created_at': null,
+        'paid_amount': null,
+        'remaining_amount': null,
+        'status': null,
+        'is_overdue': null,
+      });
+      expect(record.id, '');
+      expect(record.type, '');
+      expect(record.personName, '');
+      expect(record.date, '');
+      expect(record.status, '');
+      expect(record.id, isNot('null'));
+      expect(record.personName, isNot('null'));
+      expect(record.amount, 100000);
+      expect(record.paidAmount, 0);
+      expect(record.remainingAmount, 0);
+      expect(record.isOverdue, isFalse);
+    });
+  });
 }

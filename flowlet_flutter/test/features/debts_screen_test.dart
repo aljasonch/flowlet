@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flowlet_flutter/core/privacy.dart';
 import 'package:flowlet_flutter/data/debts_repo.dart';
 import 'package:flowlet_flutter/features/debts/debts_screen.dart';
@@ -55,19 +57,22 @@ Future<void> _pump(
   WidgetTester tester, {
   List<DebtRecord> debts = _debts,
   DebtsSummary summary = _summary,
+  Future<DebtsSummary> Function()? summaryFn,
+  Future<void> Function(String id)? deleteDebtFn,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
       home: Scaffold(
         body: DebtsScreen(
           debtsFn: () async => debts,
-          summaryFn: () async => summary,
+          summaryFn: summaryFn ?? () async => summary,
           categoriesFn: () async => [
             {'id': 'c1', 'name': 'Bills'},
           ],
           sourcesFn: () async => [
             {'id': 's1', 'name': 'Salary'},
           ],
+          deleteDebtFn: deleteDebtFn,
         ),
       ),
     ),
@@ -146,6 +151,31 @@ void main() {
         findsOneWidget,
       );
     });
+
+    testWidgets('delete refreshes the summary totals', (tester) async {
+      var calls = 0;
+      await _pump(
+        tester,
+        debts: [_debts[0]],
+        summaryFn: () async {
+          calls++;
+          return calls == 1
+              ? const DebtsSummary(75000, 0, 1, 0, 0)
+              : const DebtsSummary(0, 0, 0, 0, 0);
+        },
+        deleteDebtFn: (_) async {},
+      );
+      expect(find.textContaining('75.000'), findsWidgets);
+      await tester.tap(find.byTooltip('Delete record for Bank'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Delete'));
+      await tester.pumpAndSettle();
+      expect(find.text('Record deleted'), findsOneWidget);
+      expect(find.text('Bank'), findsNothing);
+      expect(calls, greaterThanOrEqualTo(2));
+      expect(find.text('Rp 0'), findsWidgets);
+      expect(find.textContaining('75.000'), findsNothing);
+    });
   });
 
   group('DebtFormDialog', () {
@@ -201,6 +231,37 @@ void main() {
       expect(
           saved.first['date'], matches(RegExp(r'^\d{4}-\d{2}-\d{2}$')));
     });
+
+    testWidgets('signed-out save redirects to login', (tester) async {
+      final router = GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) => Scaffold(
+              body: DebtFormDialog(
+                onSave: (_) async => throw StateError('Not signed in'),
+              ),
+            ),
+          ),
+          GoRoute(
+            path: '/login',
+            builder: (context, state) =>
+                const Scaffold(body: Text('Login page')),
+          ),
+        ],
+      );
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+          find.byKey(const ValueKey('debt-person')), 'Bank');
+      await tester.enterText(
+          find.byKey(const ValueKey('debt-amount')), '100000');
+      await tester.pump();
+      await tester.tap(find.text('Save record'));
+      await tester.pumpAndSettle();
+      expect(find.text('Login page'), findsOneWidget);
+    });
   });
 
   group('PaymentDialog', () {
@@ -236,6 +297,61 @@ void main() {
       expect(saved.first['amount'], 75000);
       expect(saved.first['record_to_cashflow'], isTrue);
       expect(saved.first['category_id'], 'c1');
+    });
+
+    testWidgets('header remaining is masked when privacy is on',
+        (tester) async {
+      privacyMode.value = true;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PaymentDialog(
+              debt: _debts[0],
+              categories: const [
+                {'id': 'c1', 'name': 'Bills'},
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Bank • Remaining: Rp ••••••'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('75.000'), findsNothing);
+      privacyMode.value = false;
+    });
+
+    testWidgets('auth failure redirects to login', (tester) async {
+      final router = GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) => Scaffold(
+              body: PaymentDialog(
+                debt: _debts[0],
+                categories: const [
+                  {'id': 'c1', 'name': 'Bills'},
+                ],
+                onSave: (_, __) async =>
+                    throw AuthException('signed out'),
+              ),
+            ),
+          ),
+          GoRoute(
+            path: '/login',
+            builder: (context, state) =>
+                const Scaffold(body: Text('Login page')),
+          ),
+        ],
+      );
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Confirm payment'));
+      await tester.pumpAndSettle();
+      expect(find.text('Login page'), findsOneWidget);
     });
   });
 }

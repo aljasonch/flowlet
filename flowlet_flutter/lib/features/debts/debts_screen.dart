@@ -389,6 +389,8 @@ class _DebtsScreenState extends State<DebtsScreen> {
         await deleteDebt(debt.id);
       }
       if (!mounted) return;
+      await _refreshSummary();
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Record deleted')),
       );
@@ -398,9 +400,23 @@ class _DebtsScreenState extends State<DebtsScreen> {
         _debts = List.of(_debts)
           ..insert(index > _debts.length ? _debts.length : index, debt);
       });
+      await _refreshSummary();
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Could not delete. Try again.')),
       );
+    }
+  }
+
+  /// Reloads the summary card totals without touching the list. Failures
+  /// are ignored so a stale summary never masks the list state.
+  Future<void> _refreshSummary() async {
+    try {
+      final s = await _getSummary();
+      if (!mounted) return;
+      setState(() => _summary = s);
+    } catch (_) {
+      // Keep the existing summary.
     }
   }
 
@@ -769,6 +785,16 @@ class _DebtFormDialogState extends State<DebtFormDialog> {
               : 'Receivable recorded'),
         ),
       );
+    } on AuthException {
+      if (!mounted) return;
+      context.go('/login');
+    } on StateError catch (e) {
+      if (!mounted) return;
+      if (isNotSignedInError(e)) {
+        context.go('/login');
+      } else {
+        setState(() => _error = 'Could not save. Try again.');
+      }
     } catch (e) {
       if (!mounted) return;
       final message =
@@ -990,6 +1016,16 @@ class _PaymentDialogState extends State<PaymentDialog> {
               : 'Receivable payment recorded'),
         ),
       );
+    } on AuthException {
+      if (!mounted) return;
+      context.go('/login');
+    } on StateError catch (e) {
+      if (!mounted) return;
+      if (isNotSignedInError(e)) {
+        context.go('/login');
+      } else {
+        setState(() => _error = 'Could not save. Try again.');
+      }
     } catch (e) {
       if (!mounted) return;
       final message =
@@ -1010,11 +1046,18 @@ class _PaymentDialogState extends State<PaymentDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '${debt.personName} • Remaining: ${formatIDR(debt.remainingAmount)}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                  ),
+            ValueListenableBuilder<bool>(
+              valueListenable: privacyMode,
+              builder: (context, hidden, _) {
+                final remaining =
+                    hidden ? _masked : formatIDR(debt.remainingAmount);
+                return Text(
+                  '${debt.personName} • Remaining: $remaining',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                );
+              },
             ),
             const SizedBox(height: 12),
             TextField(
