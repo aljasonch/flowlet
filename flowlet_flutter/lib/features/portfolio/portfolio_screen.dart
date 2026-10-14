@@ -47,6 +47,15 @@ String _safePercent(String p) {
   }
 }
 
+/// First 10 chars (YYYY-MM-DD) of an ISO timestamp. Tolerant of short or
+/// malformed values — never throws on substring; '' means "no usable date".
+String safeDatePrefix(String? iso) {
+  if (iso == null) return '';
+  final s = iso.trim();
+  if (s.isEmpty) return '';
+  return s.length >= 10 ? s.substring(0, 10) : s;
+}
+
 /// Display-only overall return from summary ints (mirrors the web view).
 /// Integer Decimal math; valuation itself stays in SQL.
 String? overallGainPct(PortfolioSummary s) {
@@ -77,6 +86,7 @@ class PortfolioScreen extends StatefulWidget {
     this.allocationFn,
     this.usdRateFn,
     this.refresher,
+    this.providerRefFn,
     this.appBaseUrl,
   });
 
@@ -85,6 +95,7 @@ class PortfolioScreen extends StatefulWidget {
   final Future<List<AllocationSlice>> Function()? allocationFn;
   final Future<String?> Function()? usdRateFn;
   final Future<RefreshResult> Function()? refresher;
+  final Future<String?> Function(String id)? providerRefFn;
   final String? appBaseUrl;
 
   @override
@@ -111,9 +122,8 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   Future<String?> _getUsdRate() async {
     if (widget.usdRateFn != null) return widget.usdRateFn!();
     final row = await db.from('profiles').select('usd_idr_rate').maybeSingle();
-    final v = row?['usd_idr_rate'];
-    if (v == null) return null;
-    return '$v';
+    // usd_idr_rate is numeric: arrives as String; num handled defensively.
+    return decimalToString(row?['usd_idr_rate']);
   }
 
   Future<RefreshResult> _doRefresh() {
@@ -224,9 +234,27 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   bool get _showUsdBanner => _loadedOnce && _hasUsdHoldings && _usdRate == null;
 
   Future<void> _openForm({PortfolioHolding? existing}) async {
+    // portfolio_holdings() omits provider_ref, so fetch the holding row for
+    // CoinGecko edits; otherwise saving would wipe the coin id.
+    String? providerRef = existing?.providerRef;
+    if (existing != null &&
+        existing.priceSource == 'coingecko' &&
+        providerRef == null) {
+      try {
+        providerRef = widget.providerRefFn != null
+            ? await widget.providerRefFn!(existing.id)
+            : await fetchHoldingProviderRef(existing.id);
+      } catch (_) {
+        providerRef = null;
+      }
+    }
+    if (!mounted) return;
     final saved = await showDialog<bool>(
       context: context,
-      builder: (context) => HoldingDialog(existing: existing),
+      builder: (context) => HoldingDialog(
+        existing: existing,
+        initialProviderRef: providerRef,
+      ),
     );
     if (saved == true && mounted) _load();
   }
@@ -722,13 +750,23 @@ class HoldingTile extends StatelessWidget {
         children: [
           if (h.platform != null && h.platform!.isNotEmpty)
             Text('via ${h.platform!}'),
-          Text(
-            '${h.name} • Qty: ${_safeQuantity(h.quantity)} • Avg: ${_safePrice(h.avgCost, h.priceCurrency)}${hasPrice ? ' • Px: ${_safePrice(h.currentPrice!, h.priceCurrency)}' : ''}',
-            style: const TextStyle(
-                fontFeatures: [FontFeature.tabularFigures()]),
+          ValueListenableBuilder<bool>(
+            valueListenable: privacyMode,
+            builder: (context, hidden, _) {
+              final avg =
+                  hidden ? _maskedShort : _safePrice(h.avgCost, h.priceCurrency);
+              final px = !hasPrice
+                  ? ''
+                  : ' • Px: ${hidden ? _maskedShort : _safePrice(h.currentPrice!, h.priceCurrency)}';
+              return Text(
+                '${h.name} • Qty: ${_safeQuantity(h.quantity)} • Avg: $avg$px',
+                style: const TextStyle(
+                    fontFeatures: [FontFeature.tabularFigures()]),
+              );
+            },
           ),
-          if (h.priceAsOf != null)
-            Text('Updated ${h.priceAsOf!.substring(0, 10)}',
+          if (safeDatePrefix(h.priceAsOf).isNotEmpty)
+            Text('Updated ${safeDatePrefix(h.priceAsOf)}',
                 style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
@@ -808,8 +846,11 @@ const _assetTypes = ['stock', 'crypto', 'fund', 'gold', 'bond', 'other'];
 /// Add/edit dialog for one position. Decimal inputs use Indonesian
 /// convention (comma decimal separator) with a live parsed preview.
 class HoldingDialog extends StatefulWidget {
-  const HoldingDialog({super.key, this.existing});
+  const HoldingDialog({super.key, this.existing, this.initialProviderRef});
   final PortfolioHolding? existing;
+
+  /// Coin id fetched from the holding row (portfolio_holdings() omits it).
+  final String? initialProviderRef;
 
   @override
   State<HoldingDialog> createState() => _HoldingDialogState();
@@ -842,7 +883,8 @@ class _HoldingDialogState extends State<HoldingDialog> {
     _avgCost = TextEditingController(text: e?.avgCost ?? '');
     _priceCurrency = e?.priceCurrency ?? 'IDR';
     _priceSource = e?.priceSource ?? 'manual';
-    _providerRef = TextEditingController();
+    _providerRef = TextEditingController(
+        text: widget.initialProviderRef ?? e?.providerRef ?? '');
     _manualPrice = TextEditingController(text: e?.currentPrice ?? '');
   }
 
@@ -873,6 +915,12 @@ class _HoldingDialogState extends State<HoldingDialog> {
   Future<void> _save() async {
     if (_priceSource == 'coingecko' && _assetType != 'crypto') {
       setState(() => _saveError = 'CoinGecko is only available for crypto');
+      return;
+    }
+    // Never save a CoinGecko holding without its coin id: editing would
+    // otherwise wipe provider_ref and break future price refreshes.
+    if (_priceSource == 'coingecko' && _providerRef.text.trim().isEmpty) {
+      setState(() => _saveError = 'Coin id is required');
       return;
     }
     if (!_formKey.currentState!.validate()) return;

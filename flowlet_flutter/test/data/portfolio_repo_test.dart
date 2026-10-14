@@ -185,8 +185,7 @@ void main() {
     expect(rows[1].sharePct, isA<String>());
   });
 
-  test('decimal-string fields never pass through double', () async {
-    Future<dynamic> fake(String f, {Map<String, dynamic>? params}) async {
+  test('decimal-string fields never pass through double', () async {    Future<dynamic> fake(String f, {Map<String, dynamic>? params}) async {
       return [
         {
           'id': 'h4',
@@ -217,5 +216,113 @@ void main() {
     expect(h.currentPrice, '0.00000003');
     expect(isValidDecimalString(h.quantity), isTrue);
     expect(isValidDecimalString(h.currentPrice!), isTrue);
+  });
+
+  test('fromRow maps provider_ref for CoinGecko holdings', () async {
+    Future<dynamic> fake(String f, {Map<String, dynamic>? params}) async {
+      return [
+        {
+          'id': 'h5',
+          'asset_type': 'crypto',
+          'symbol': 'BTC',
+          'name': 'Bitcoin',
+          'platform': null,
+          'quantity': '0.1',
+          'avg_cost': '900000000',
+          'price_currency': 'IDR',
+          'price_source': 'coingecko',
+          'provider_ref': 'bitcoin',
+          'current_price': '1050000000',
+          'price_as_of': '2026-10-14T01:00:00Z',
+          'value_native': '105000000',
+          'cost_native': '90000000',
+          'gain_native': '15000000',
+          'gain_pct': '16.67',
+          'value_idr': '105000000',
+          'cost_idr': '90000000',
+          'gain_idr': '15000000',
+        },
+      ];
+    }
+
+    final rows = await fetchHoldings(rpc: fake);
+    expect(rows.first.providerRef, 'bitcoin');
+  });
+
+  test('fetchHoldingProviderRef returns ref, null when missing or blank',
+      () async {
+    Future<Map?> withRef(String id) async => {'provider_ref': 'bitcoin'};
+    Future<Map?> missing(String id) async => null;
+    Future<Map?> blank(String id) async => {'provider_ref': '  '};
+
+    expect(await fetchHoldingProviderRef('h1', fetcher: withRef), 'bitcoin');
+    expect(await fetchHoldingProviderRef('h1', fetcher: missing), isNull);
+    expect(await fetchHoldingProviderRef('h1', fetcher: blank), isNull);
+  });
+
+  test('IDR parsing uses Decimal, never double: truncates, never throws',
+      () async {
+    Future<dynamic> fake(String f, {Map<String, dynamic>? params}) async {
+      return [
+        {
+          'total_value_idr': '123.9',
+          'total_cost_idr': 'not-a-number',
+          'total_gain_idr': '  7000  ',
+          'priced_count': 45.9,
+          'unpriced_count': null,
+        },
+      ];
+    }
+
+    final s = await fetchSummary(rpc: fake);
+    expect(s.totalValueIdr, 123);
+    expect(s.totalCostIdr, 0);
+    expect(s.totalGainIdr, 7000);
+    expect(s.pricedCount, 45);
+    expect(s.unpricedCount, 0);
+  });
+
+  test('nullable IDR parsing preserves null, never collapses to zero',
+      () async {
+    Future<dynamic> fake(String f, {Map<String, dynamic>? params}) async {
+      return [
+        {
+          'id': 'h6',
+          'asset_type': 'stock',
+          'symbol': 'BBCA',
+          'name': 'Bank BCA',
+          'platform': null,
+          'quantity': '10',
+          'avg_cost': '9500',
+          'price_currency': 'IDR',
+          'price_source': 'manual',
+          'current_price': '10200',
+          'price_as_of': '2026-10-14T01:00:00Z',
+          'value_native': '102000',
+          'cost_native': '95000',
+          'gain_native': '7000',
+          'gain_pct': '7.37',
+          'value_idr': '102000.9',
+          'cost_idr': '',
+          'gain_idr': 'abc',
+        },
+      ];
+    }
+
+    final rows = await fetchHoldings(rpc: fake);
+    final h = rows.first;
+    expect(h.valueIdr, 102000);
+    expect(h.costIdr, isNull);
+    expect(h.gainIdr, isNull);
+  });
+
+  test('decimalToString handles int exactly and normalizes doubles', () {
+    expect(decimalToString(40), '40');
+    expect(decimalToString('60.00'), '60.00');
+    expect(decimalToString(null), isNull);
+    expect(decimalToString(''), isNull);
+    final tiny = decimalToString(1e-7);
+    expect(tiny, isNotNull);
+    expect(isValidDecimalString(tiny!), isTrue);
   });
 }

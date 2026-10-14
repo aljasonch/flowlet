@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flowlet_flutter/core/privacy.dart';
 import 'package:flowlet_flutter/data/portfolio_repo.dart';
 import 'package:flowlet_flutter/data/prices_repo.dart';
 import 'package:flowlet_flutter/features/portfolio/portfolio_screen.dart';
@@ -12,6 +13,7 @@ PortfolioHolding _holding({
   String priceSource = 'manual',
   String? currentPrice = '1050000000',
   String? priceAsOf = '2026-10-14T01:00:00Z',
+  String? providerRef,
   int? valueIdr = 5670000,
   int? costIdr = 5130000,
   int? gainIdr = 540000,
@@ -27,6 +29,7 @@ PortfolioHolding _holding({
     avgCost: '950000000',
     priceCurrency: priceCurrency,
     priceSource: priceSource,
+    providerRef: providerRef,
     currentPrice: currentPrice,
     priceAsOf: priceAsOf,
     valueNative: currentPrice == null ? null : '5670000',
@@ -45,6 +48,7 @@ Widget _screen({
   List<AllocationSlice>? allocation,
   String? usdRate = '16000',
   Future<RefreshResult> Function()? refresher,
+  Future<String?> Function(String id)? providerRefFn,
 }) {
   return MaterialApp(
     home: Scaffold(
@@ -56,6 +60,7 @@ Widget _screen({
             allocation ?? const [AllocationSlice('crypto', 5670000, '100.00')],
         usdRateFn: () async => usdRate,
         refresher: refresher,
+        providerRefFn: providerRefFn,
       ),
     ),
   );
@@ -137,5 +142,86 @@ void main() {
     expect(overallGainPct(const PortfolioSummary(90, 100, -10, 1, 0)),
         '-10.00%');
     expect(overallGainPct(const PortfolioSummary(0, 0, 0, 0, 0)), isNull);
+  });
+
+  test('safeDatePrefix never throws on short or malformed input', () {
+    expect(safeDatePrefix('2026-10-14T01:00:00Z'), '2026-10-14');
+    expect(safeDatePrefix('2026-10-14'), '2026-10-14');
+    expect(safeDatePrefix('2026'), '2026');
+    expect(safeDatePrefix(''), '');
+    expect(safeDatePrefix(null), '');
+    expect(safeDatePrefix('   '), '');
+  });
+
+  testWidgets('privacy mode masks avg and price but keeps quantity visible',
+      (tester) async {
+    privacyMode.value = true;
+    addTearDown(() => privacyMode.value = false);
+    await tester.pumpWidget(_screen());
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Qty: 0.0054'), findsWidgets);
+    expect(find.textContaining('Avg: \u2022\u2022\u2022\u2022\u2022\u2022'),
+        findsOneWidget);
+    expect(find.textContaining('Px: \u2022\u2022\u2022\u2022\u2022\u2022'),
+        findsOneWidget);
+    expect(find.textContaining('950000000'), findsNothing);
+  });
+
+  testWidgets('edit dialog prefills provider ref fetched from holding row',
+      (tester) async {
+    await tester.pumpWidget(_screen(
+      holdings: [
+        _holding(
+          id: 'cg1',
+          priceSource: 'coingecko',
+          currentPrice: '1050000000',
+          priceAsOf: '2026-10-14T01:00:00Z',
+          providerRef: null,
+        ),
+      ],
+      providerRefFn: (_) async => 'bitcoin',
+    ));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Edit BTC'));
+    await tester.pumpAndSettle();
+    expect(find.text('bitcoin'), findsOneWidget);
+  });
+
+  testWidgets('edit dialog keeps provider ref already on the holding',
+      (tester) async {
+    await tester.pumpWidget(_screen(
+      holdings: [
+        _holding(
+          id: 'cg2',
+          priceSource: 'coingecko',
+          currentPrice: '1050000000',
+          priceAsOf: '2026-10-14T01:00:00Z',
+          providerRef: 'ethereum',
+        ),
+      ],
+      // Must not be consulted when the holding already carries its ref.
+      providerRefFn: (_) async => throw StateError('should not be called'),
+    ));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Edit BTC'));
+    await tester.pumpAndSettle();
+    expect(find.text('ethereum'), findsOneWidget);
+  });
+
+  testWidgets('coingecko save with empty coin id is blocked', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: HoldingDialog(
+          existing: _holding(
+            priceSource: 'coingecko',
+            providerRef: null,
+          ),
+        ),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+    expect(find.text('Coin id is required'), findsOneWidget);
   });
 }
