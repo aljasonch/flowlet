@@ -32,4 +32,4 @@ Done. Commit `f86050f` on branch `feat/flutter-port`.
 - `lib/features/dashboard/dashboard_screen.dart`: `_SpendingCard` renamed to public `SpendingCard` (plus `super.key`, mirroring round-1 `TrendCard` change) and its `BarChart` wrapped in a `ValueListenableBuilder` on `privacyMode` — hidden renders the same 200px masked placeholder (`Rp ••••••`) instead of real bar heights; legend-row masking unchanged. Reuses existing `_masked` constant, no new patterns.
 - Tests: 2 new widget tests in `test/features/dashboard_screen_test.dart` (spending hidden renders masked placeholder, no real bars; spending visible renders category rows with no mask).
 - Verification: `flutter test test/data/dashboard_repo_test.dart test/features/dashboard_screen_test.dart` — 13/13 passed. `flutter analyze` — no issues found.
-- Commit: `PENDING fix(flutter): mask spending bar chart when privacy hidden` (files: dashboard_screen.dart, dashboard_screen_test.dart).
+- Commit: `f209017 fix(flutter): mask spending bar chart when privacy hidden` (files: dashboard_screen.dart, dashboard_screen_test.dart).
